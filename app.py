@@ -1,3 +1,4 @@
+import tempfile
 import uuid
 import streamlit as st
 import os
@@ -33,7 +34,8 @@ def main():
         file_id = uuid.uuid4()
 
         # Placeholder for feedback generation (dummy feedback for now)
-        feedback_text = """The energy of the user was generally up to the mark, with slight variations in between. 
+        feedback_text = """
+        The energy of the user was generally up to the mark, with slight variations in between. 
         Overall, the user was able to maintain a good energy level throughout the video. 
         The pitch of the user was also consistent, with minor fluctuations. 
         The silence detection algorithm identified some silent segments, which could be improved by reducing pauses."""
@@ -41,16 +43,30 @@ def main():
         if uploaded_media and uploaded_text:
             if not feedback_generated:
                 with st.spinner("Generating feedback..."):
+                    file_id = uuid.uuid4()
 
-                    convert_vid_to_audio("good.mp4", f"audio_{file_id}.wav")
-                    get_speech_features(
-                        f"audio_{file_id}.wav",
-                        f"pitch_{file_id}.txt",
-                        f"energy_{file_id}.txt",
-                        f"silence_{file_id}.txt",
-                    )
+                    # Save uploaded media to a temp file
+                    with tempfile.NamedTemporaryFile(delete=False, suffix=os.path.splitext(uploaded_media.name)[-1]) as temp_input:
+                        temp_input.write(uploaded_media.read())
+                        temp_input_path = temp_input.name
+
+                    # Create a temp output path for audio
+                    temp_output_audio = tempfile.NamedTemporaryFile(delete=False, suffix=".wav")
+                    temp_output_audio_path = temp_output_audio.name
+                    temp_output_audio.close()
+
+                    # Convert video/audio to wav
+                    convert_vid_to_audio(temp_input_path, temp_output_audio_path)
+
+                    # Generate speech features
+                    pitch_txt = tempfile.NamedTemporaryFile(delete=False, suffix=".txt").name
+                    energy_txt = tempfile.NamedTemporaryFile(delete=False, suffix=".txt").name
+                    silence_txt = tempfile.NamedTemporaryFile(delete=False, suffix=".txt").name
+
+                    get_speech_features(temp_output_audio_path, pitch_txt, energy_txt, silence_txt)
+
+                    # Optionally read and display feedback
                     st.success("Feedback generated successfully!")
-                    feedback_generated = True
                     st.text_area("Feedback", feedback_text, height=200)
 
 

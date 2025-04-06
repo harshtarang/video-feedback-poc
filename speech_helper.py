@@ -103,7 +103,7 @@ def get_speech_features(audio_file, pitch_txt_name, energy_txt_name, silence_txt
 
 def convert_vid_to_audio(input_vid_file, output_aud_file):
     print("**************** STARTING VIDEO TO AUDIO CONVERSION **********************")
-    os.system("ffmpeg -i " + input_vid_file + " -ar 16000 -ac 1 " + output_aud_file)
+    os.system("ffmpeg -y -i " + input_vid_file + " -ar 16000 -ac 1 " + output_aud_file)
     print("**************** VIDEO TO AUDIO CONVERSION DONE **********************")
 
 
