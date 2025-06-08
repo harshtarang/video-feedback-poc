@@ -3,11 +3,38 @@ import uuid
 import streamlit as st
 import os
 
+from feature_processor import word_level_feat_computation
+from llm_helper import prompt_for_audio, prompt_for_text, speech_to_text
 from speech_helper import get_speech_features, convert_vid_to_audio
+from dotenv import load_dotenv
 
+page_bg_img = '''
+<style>
+.stApp {
+  background-image: url("https://media.istockphoto.com/id/1189302612/photo/multiethnic-specialist-doctors-discussing-case.jpg?s=612x612&w=0&k=20&c=2JwchjpCbkJfyyAfy4CK4lpeZlds6-OCOY4nYPrvwOQ=");
+  background-size: cover;
+  background-position: center;
+}
+</style>
+'''
+page_bg_img = ""
+
+def get_keyword_list():
+    keyword_list = "Quantus 50, Co-enzyme Q10, Selenium, umm, hmm"
+    return keyword_list
+
+def load_environment():
+    """Load environment variables from .env file"""
+    # Load .env file from current directory
+    load_dotenv(override=True)
+    print(os.getenv("OPENAI_API_KEY"))
+    print("Environment variables loaded successfully!")
 
 def main():
+    
     st.set_page_config(layout="wide")
+    st.markdown(page_bg_img, unsafe_allow_html=True)
+    load_environment()
     feedback_generated = False
 
     # UI Layout
@@ -31,24 +58,20 @@ def main():
         )
         uploaded_text = st.file_uploader("Upload Transcript File", type=["txt"])
 
-        file_id = uuid.uuid4()
-
-        # Placeholder for feedback generation (dummy feedback for now)
-        feedback_text = """
-        The energy of the user was generally up to the mark, with slight variations in between. 
-        Overall, the user was able to maintain a good energy level throughout the video. 
-        The pitch of the user was also consistent, with minor fluctuations. 
-        The silence detection algorithm identified some silent segments, which could be improved by reducing pauses."""
-
         if uploaded_media and uploaded_text:
             if not feedback_generated:
                 with st.spinner("Generating feedback..."):
-                    file_id = uuid.uuid4()
-
+                    print(f"File name: {uploaded_media.name}")
+                    file_name = uploaded_media.name.split('.')[0]
                     # Save uploaded media to a temp file
                     with tempfile.NamedTemporaryFile(delete=False, suffix=os.path.splitext(uploaded_media.name)[-1]) as temp_input:
                         temp_input.write(uploaded_media.read())
                         temp_input_path = temp_input.name
+
+                    # Save uploaded text to a temp file
+                    with tempfile.NamedTemporaryFile(delete=False, suffix=os.path.splitext(uploaded_media.name)[-1]) as temp_input:
+                        temp_input.write(uploaded_media.read())
+                        ground_truth_path = temp_input.name
 
                     # Create a temp output path for audio
                     temp_output_audio = tempfile.NamedTemporaryFile(delete=False, suffix=".wav")
@@ -62,12 +85,22 @@ def main():
                     pitch_txt = tempfile.NamedTemporaryFile(delete=False, suffix=".txt").name
                     energy_txt = tempfile.NamedTemporaryFile(delete=False, suffix=".txt").name
                     silence_txt = tempfile.NamedTemporaryFile(delete=False, suffix=".txt").name
-
                     get_speech_features(temp_output_audio_path, pitch_txt, energy_txt, silence_txt)
 
-                    # Optionally read and display feedback
+                    # Generate transcription text from audio
+                    transcription_fl = tempfile.NamedTemporaryFile(delete=False, suffix=".json").name
+                    speech_to_text(temp_output_audio_path, transcription_fl, keyword_list = get_keyword_list(), file_name=file_name)
+
+                    # Generate word-level features
+                    word_level_feat_file = tempfile.NamedTemporaryFile(delete=False, suffix=".csv").name
+                    aat_file = tempfile.NamedTemporaryFile(delete=False, suffix=".txt").name
+                    word_level_feat_computation(transcription_fl, pitch_txt, energy_txt, silence_txt, word_level_feat_file, aat_file)
+
+                    ## LLM BASED FEEDBACK
+                    audio_feedback = prompt_for_audio(aat_file, temp_output_audio_path)
+                    corr_fb, quality_fb = prompt_for_text(ground_truth_path, transcription_fl)
                     st.success("Feedback generated successfully!")
-                    st.text_area("Feedback", feedback_text, height=200)
+                    st.markdown(f"Audio Feedback:\n{audio_feedback}\n\nCorrectness Feedback:\n{corr_fb}\n\n Quality Feedback:\n{quality_fb}")
 
 
 if __name__ == "__main__":
