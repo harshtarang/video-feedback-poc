@@ -61,8 +61,9 @@ def main():
         if uploaded_media and uploaded_text:
             if not feedback_generated:
                 with st.spinner("Generating feedback..."):
-                    print(f"File name: {uploaded_media.name}")
+                    print(f"File name with ext: {uploaded_media.name}")
                     file_name = uploaded_media.name.split('.')[0]
+                    print(f"File name: {file_name}")
                     # Save uploaded media to a temp file
                     with tempfile.NamedTemporaryFile(delete=False, suffix=os.path.splitext(uploaded_media.name)[-1]) as temp_input:
                         temp_input.write(uploaded_media.read())

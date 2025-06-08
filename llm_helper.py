@@ -9,7 +9,7 @@ def speech_to_text(audio_file, transcription_file, keyword_list, openai_model = 
         if os.getenv("USE_CACHE_TRANSCRIPTION") == "True" and os.path.exists(f"cache/transcriptions/transcription_{file_name}.json"):
             print("*************************** USING CACHED TRANSCRIPTION **********************************")
             # Load cached transcription
-            cached_transcription_file = f"resources/transcriptions/transcription_{os.getenv('VIDEO_FILE_NAME')}.json"
+            cached_transcription_file = f"cache/transcriptions/transcription_{file_name}.json"
             with open(cached_transcription_file) as f:
                 transcription_dict = json.load(f)
         else:
