@@ -3,6 +3,14 @@
 import os
 from openai import OpenAI
 
+# Model pricing in dollars per token (input cost per token, output cost per token)
+MODEL_PRICING = {
+    "gpt-4o-mini": (0.50 / 1_000_000, 1.50 / 1_000_000),
+    "gpt-4o": (5.00 / 1_000_000, 15.00 / 1_000_000),
+    "gpt-4-turbo": (10.00 / 1_000_000, 30.00 / 1_000_000),
+    "gpt-3.5-turbo": (0.50 / 1_000_000, 1.50 / 1_000_000),
+}
+
 MAX_COMPLETION_TOKENS = os.getenv("OPENAI_MAX_COMPLETION_TOKENS", 512)
 
 def call_openai(
@@ -29,28 +37,43 @@ def call_openai(
             top_p=top_p,
             max_tokens=max_completion_tokens,
         )
-    # print(completion.choices[0].message.content)
+    # Calculate and print cost
+    prompt_tokens = completion.usage.prompt_tokens
+    completion_tokens = completion.usage.completion_tokens
+    
+    if model in MODEL_PRICING:
+        input_price, output_price = MODEL_PRICING[model]
+        cost = (prompt_tokens * input_price) + (completion_tokens * output_price)
+        print(f"OpenAI API call cost: ${cost:.6f} (model: {model}, prompt_tokens: {prompt_tokens}, completion_tokens: {completion_tokens})")
+    else:
+        print(f"OpenAI API call: model {model} not found in pricing dictionary. Token usage: prompt_tokens={prompt_tokens}, completion_tokens={completion_tokens}")
+    
     return completion.choices[0].message.content
 
 
 def get_asr_transcription(audio_file, keyword_list):
 
     client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-    audio_file = open(audio_file, "rb")
+    with open(audio_file, "rb") as f:
+        transcription = client.audio.transcriptions.create(
+            model="whisper-1",
+            file=f,
+            language="en",
+            prompt=keyword_list,
+            response_format="verbose_json",  # JSON format includes timestamps
+            timestamp_granularities=["word"],
+            include=["logprobs"],
+        )
 
-    transcription = client.audio.transcriptions.create(
-        model="whisper-1",
-        file=audio_file,
-        # response_format="text",
-        language="en",
-        prompt=keyword_list,
-        response_format="verbose_json",  # JSON format includes timestamps
-        timestamp_granularities=["word"],
-        # normalize=False,
-        include=["logprobs"],
-    )
+    # Calculate ASR cost: $0.006 per minute
+    cost_per_minute = 0.006
+    cost = (transcription.duration / 60) * cost_per_minute
+    print(f"OpenAI ASR transcription cost: ${cost:.6f} (duration: {transcription.duration:.2f} seconds)")
+    
     return transcription
 
 
 if __name__ == "__main__":
-    pass
+    from dotenv import load_dotenv
+    load_dotenv(override=True)
+    response = call_openai("Tell me a joke")
