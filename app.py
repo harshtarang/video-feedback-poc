@@ -5,6 +5,7 @@ import os
 
 from feature_processor import word_level_feat_computation
 from llm_helper import prompt_for_audio, prompt_for_text, speech_to_text
+from non_llm_feedback import filler_detection
 from speech_helper import get_speech_features, convert_vid_to_audio
 from dotenv import load_dotenv
 from prompt_templates import AUDIO_PROMPT, TEXT_PROMPT, TEXT_QUALITY_PROMPT
@@ -21,7 +22,8 @@ page_bg_img = '''
 page_bg_img = ""
 
 def get_keyword_list():
-    keyword_list = "Quantus 50, Co-enzyme Q10, Selenium, umm, hmm, Udiliv, diabetes, obesity, non-alcoholic liver diseases, liver disease, non-alcoholic fatty liver disease, AST, ALT, GGT, ALP, Ursodeoxycholic acid, position paper endorsed by 4 esteemed societies, Indian society of Gastroenterology, Indian college of cardiology, Endocrine society of India, INASL, cholestasis, hepatoprotective, antioxidant, anti-inflammatory, antiapoptotic, hypercholeretic, Non-alcoholic Liver Disease, 300mg BID, 10-15mg per , kg per day"
+    # keyword_list = "Quantus 50, Co-enzyme Q10, Selenium, umm, hmm, Udiliv, diabetes, obesity, non-alcoholic liver diseases, liver disease, non-alcoholic fatty liver disease, AST, ALT, GGT, ALP, Ursodeoxycholic acid, position paper endorsed by 4 esteemed societies, Indian society of Gastroenterology, Indian college of cardiology, Endocrine society of India, INASL, cholestasis, hepatoprotective, antioxidant, anti-inflammatory, antiapoptotic, hypercholeretic, Non-alcoholic Liver Disease, 300mg BID, 10-15mg per , kg per day"
+    keyword_list = "Quantus 50, Co-enzyme Q10, Selenium, umm, hmm"
     return keyword_list
 
 def load_environment():
@@ -108,8 +110,11 @@ def main():
                     # Generate word-level features
                     word_level_feat_file = tempfile.NamedTemporaryFile(delete=False, suffix=".csv").name
                     aat_file = tempfile.NamedTemporaryFile(delete=False, suffix=".txt").name
-                    word_level_feat_computation(transcription_fl, pitch_txt, energy_txt, silence_txt, word_level_feat_file, aat_file)
-
+                    tt_file = tempfile.NamedTemporaryFile(delete=False, suffix=".txt").name
+                    word_level_feat_computation(transcription_fl, pitch_txt, energy_txt, silence_txt, word_level_feat_file, aat_file,  tt_file)
+                    non_llm_feedback = filler_detection(word_level_feat_file, silence_txt, window_interval = 0.02)
+                    if non_llm_feedback:
+                        st.text_area("Filler Words Feedback", value=non_llm_feedback, height=200)
                     ## LLM BASED FEEDBACK
                     audio_feedback = prompt_for_audio(aat_file, temp_output_audio_path, model=model_option, audio_prompt=audio_prompt)
                     corr_fb, quality_fb = prompt_for_text(ground_truth_path, transcription_fl, model=model_option, text_prompt=text_prompt, quality_prompt=quality_prompt)
