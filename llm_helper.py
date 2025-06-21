@@ -42,9 +42,13 @@ def prompt_for_text(gt_file, timed_transcription, model="OpenAI", text_prompt=No
 
     with open(gt_file) as f:
         gt = f.read()
+        
     with open(timed_transcription) as f:
-        transcription = json.load(f)
-    trans = transcription["text"]
+        if timed_transcription.endswith("json"):
+            transcription = json.load(f)
+            trans = transcription["text"]
+        else:
+            trans = f.read()
     
     
     print("************************ GETTING TEXT FEEDBACK **********************************")
