@@ -5,7 +5,7 @@ import pandas as pd
 from num2words import num2words
 nltk.download('punkt_tab')
 nltk.download('stopwords')
-#nltk.download('cmudict')
+nltk.download('cmudict')
 from jiwer import wer
 from nltk.tokenize import sent_tokenize
 from nltk.corpus import stopwords
