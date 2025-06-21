@@ -14,12 +14,19 @@ MODEL_PRICING = {
 MAX_COMPLETION_TOKENS = os.getenv("OPENAI_MAX_COMPLETION_TOKENS", 512)
 
 def call_openai(
-    query, temperature=0, top_p=1, max_completion_tokens=MAX_COMPLETION_TOKENS, response_format=None
+    query, temperature=0, top_p=1, max_completion_tokens=MAX_COMPLETION_TOKENS, response_format=None, provider="OpenAI"
 ):
 
-    model = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
-    base_url = os.getenv("OPENAI_BASE_URL", None)
-    client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"), base_url=base_url)
+    if provider == "Gemini":
+        model = "gemini-2.0-flash"  # Default model for Gemini
+        base_url = os.getenv("GEMINI_BASE_URL", "https://generativelanguage.googleapis.com/v1beta/openai/")
+        api_key = os.getenv("GEMINI_API_KEY")
+    else:  # OpenAI
+        model = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
+        base_url = os.getenv("OPENAI_BASE_URL", None)
+        api_key = os.getenv("OPENAI_API_KEY")
+        
+    client = OpenAI(api_key=api_key, base_url=base_url)
     if response_format != None:
         completion = client.chat.completions.create(
             model=model,
@@ -41,18 +48,21 @@ def call_openai(
     prompt_tokens = completion.usage.prompt_tokens
     completion_tokens = completion.usage.completion_tokens
     
-    if model in MODEL_PRICING:
-        input_price, output_price = MODEL_PRICING[model]
-        cost = (prompt_tokens * input_price) + (completion_tokens * output_price)
-        print(f"OpenAI API call cost: ${cost:.6f} (model: {model}, prompt_tokens: {prompt_tokens}, completion_tokens: {completion_tokens})")
-    else:
-        print(f"OpenAI API call: model {model} not found in pricing dictionary. Token usage: prompt_tokens={prompt_tokens}, completion_tokens={completion_tokens}")
+    # Only show cost for OpenAI calls
+    if provider == "OpenAI":
+        if model in MODEL_PRICING:
+            input_price, output_price = MODEL_PRICING[model]
+            cost = (prompt_tokens * input_price) + (completion_tokens * output_price)
+            print(f"OpenAI API call cost: ${cost:.6f} (model: {model}, prompt_tokens: {prompt_tokens}, completion_tokens: {completion_tokens})")
+        else:
+            print(f"OpenAI API call: model {model} not found in pricing dictionary. Token usage: prompt_tokens={prompt_tokens}, completion_tokens={completion_tokens}")
     
     return completion.choices[0].message.content
 
 
-def get_asr_transcription(audio_file, keyword_list):
+def get_asr_transcription(audio_file, keyword_list, provider="OpenAI"):
 
+    # Whisper is only available on OpenAI
     client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
     with open(audio_file, "rb") as f:
         transcription = client.audio.transcriptions.create(
