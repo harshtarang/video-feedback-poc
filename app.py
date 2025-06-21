@@ -48,6 +48,13 @@ def main():
         st.write(
             "3. Click the 'Download Feedback' button to get the generated feedback."
         )
+        
+        st.header("Settings")
+        model_option = st.selectbox(
+            "Select LLM Model",
+            ["OpenAI", "Gemini"],
+            index=0  # default to OpenAI
+        )
 
     with col2:
         st.header("Upload Files")
@@ -98,8 +105,8 @@ def main():
                     word_level_feat_computation(transcription_fl, pitch_txt, energy_txt, silence_txt, word_level_feat_file, aat_file)
 
                     ## LLM BASED FEEDBACK
-                    audio_feedback = prompt_for_audio(aat_file, temp_output_audio_path)
-                    corr_fb, quality_fb = prompt_for_text(ground_truth_path, transcription_fl)
+                    audio_feedback = prompt_for_audio(aat_file, temp_output_audio_path, model=model_option)
+                    corr_fb, quality_fb = prompt_for_text(ground_truth_path, transcription_fl, model=model_option)
                     st.success("Feedback generated successfully!")
                     st.markdown(f"Audio Feedback:\n{audio_feedback}\n\nCorrectness Feedback:\n{corr_fb}\n\n Quality Feedback:\n{quality_fb}")
 
