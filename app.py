@@ -7,6 +7,7 @@ from feature_processor import word_level_feat_computation
 from llm_helper import prompt_for_audio, prompt_for_text, speech_to_text
 from speech_helper import get_speech_features, convert_vid_to_audio
 from dotenv import load_dotenv
+from prompt_templates import AUDIO_PROMPT, TEXT_PROMPT, TEXT_QUALITY_PROMPT
 
 page_bg_img = '''
 <style>
@@ -55,6 +56,11 @@ def main():
             ["OpenAI", "Gemini"],
             index=0  # default to OpenAI
         )
+        
+        st.subheader("Prompt Templates")
+        audio_prompt = st.text_area("Speech Analyzer Prompt", value=AUDIO_PROMPT, height=200)
+        text_prompt = st.text_area("Pitch Analyzer Prompt", value=TEXT_PROMPT, height=200)
+        quality_prompt = st.text_area("Quality Analyzer Prompt", value=TEXT_QUALITY_PROMPT, height=200)
 
     with col2:
         st.header("Upload Files")
@@ -105,8 +111,8 @@ def main():
                     word_level_feat_computation(transcription_fl, pitch_txt, energy_txt, silence_txt, word_level_feat_file, aat_file)
 
                     ## LLM BASED FEEDBACK
-                    audio_feedback = prompt_for_audio(aat_file, temp_output_audio_path, model=model_option)
-                    corr_fb, quality_fb = prompt_for_text(ground_truth_path, transcription_fl, model=model_option)
+                    audio_feedback = prompt_for_audio(aat_file, temp_output_audio_path, model=model_option, audio_prompt=audio_prompt)
+                    corr_fb, quality_fb = prompt_for_text(ground_truth_path, transcription_fl, model=model_option, text_prompt=text_prompt, quality_prompt=quality_prompt)
                     st.success("Feedback generated successfully!")
                     st.markdown(f"Audio Feedback:\n{audio_feedback}\n\nCorrectness Feedback:\n{corr_fb}\n\n Quality Feedback:\n{quality_fb}")
 

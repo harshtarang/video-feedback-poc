@@ -19,24 +19,26 @@ def speech_to_text(audio_file, transcription_file, keyword_list, file_name="good
         json.dump(transcription_dict, f)
     print("*************************** TRANSCRIPTION DONE AND SAVED IN " + transcription_file + " **********************************")
 
-def prompt_for_audio(aug_trans_file, output_file, model="OpenAI"):
+def prompt_for_audio(aug_trans_file, output_file, model="OpenAI", audio_prompt=None):
 
     with open(aug_trans_file) as f:
         aug_trans = f.read()
         
     print("************************ GETTING AUDIO FEEDBACK AND SAVING IN " + output_file + " **********************************")
-    aud_prompt = AUDIO_PROMPT.format(augmented_transcription = aug_trans)
+    
+    # Use provided prompt or default
+    prompt_template = audio_prompt if audio_prompt else AUDIO_PROMPT
+    aud_prompt = prompt_template.format(augmented_transcription = aug_trans)
+    
     print(aud_prompt)
     print("*"*50)
     aud_fb = call_openai(aud_prompt, provider=model)
     print("*"*50)
     print(aud_fb)
-    # with open(output_file, "w") as f:
-    #     f.write(aud_fb)
     
     return aud_fb
         
-def prompt_for_text(gt_file, timed_transcription, model="OpenAI"):
+def prompt_for_text(gt_file, timed_transcription, model="OpenAI", text_prompt=None, quality_prompt=None):
 
     with open(gt_file) as f:
         gt = f.read()
@@ -46,11 +48,17 @@ def prompt_for_text(gt_file, timed_transcription, model="OpenAI"):
     
     
     print("************************ GETTING TEXT FEEDBACK **********************************")
-    prompt = TEXT_PROMPT.format(ground_truth_text = gt, asr_transcription = trans)
+    
+    # Use provided prompts or defaults
+    text_prompt_template = text_prompt if text_prompt else TEXT_PROMPT
+    quality_prompt_template = quality_prompt if quality_prompt else TEXT_QUALITY_PROMPT
+    
+    prompt = text_prompt_template.format(ground_truth_text = gt, asr_transcription = trans)
     print(prompt)
     print("*"*50)
     correctness_feedback = call_openai(prompt, provider=model)
-    prompt = TEXT_QUALITY_PROMPT.format(ground_truth_text = gt, asr_transcription = trans)
+    
+    prompt = quality_prompt_template.format(ground_truth_text = gt, asr_transcription = trans)
     quality_feedback = call_openai(prompt, provider=model)
 
     return correctness_feedback, quality_feedback
