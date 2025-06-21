@@ -20,7 +20,7 @@ page_bg_img = '''
 page_bg_img = ""
 
 def get_keyword_list():
-    keyword_list = "Quantus 50, Co-enzyme Q10, Selenium, umm, hmm"
+    keyword_list = "Quantus 50, Co-enzyme Q10, Selenium, umm, hmm, Udiliv, diabetes, obesity, non-alcoholic liver diseases, liver disease, non-alcoholic fatty liver disease, AST, ALT, GGT, ALP, Ursodeoxycholic acid, position paper endorsed by 4 esteemed societies, Indian society of Gastroenterology, Indian college of cardiology, Endocrine society of India, INASL, cholestasis, hepatoprotective, antioxidant, anti-inflammatory, antiapoptotic, hypercholeretic, Non-alcoholic Liver Disease, 300mg BID, 10-15mg per , kg per day"
     return keyword_list
 
 def load_environment():
