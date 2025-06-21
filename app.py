@@ -73,7 +73,7 @@ def main():
 
         if uploaded_media and uploaded_text:
             if not feedback_generated:
-                with st.spinner("Generating feedback..."):
+                with st.spinner("Generating feedback... Please wait for a few minutes and do not refresh or close the page."):
                     print(f"File name with ext: {uploaded_media.name}")
                     file_name = uploaded_media.name.split('.')[0]
                     print(f"File name: {file_name}")
