@@ -38,7 +38,13 @@ def main():
     st.set_page_config(layout="wide")
     st.markdown(page_bg_img, unsafe_allow_html=True)
     load_environment()
-    feedback_generated = False
+    # Initialize session state for files and feedback
+    if 'uploaded_media' not in st.session_state:
+        st.session_state.uploaded_media = None
+    if 'uploaded_text' not in st.session_state:
+        st.session_state.uploaded_text = None
+    if 'feedback' not in st.session_state:
+        st.session_state.feedback = None
 
     # UI Layout
     col1, col2 = st.columns([1, 2])
@@ -73,8 +79,13 @@ def main():
         )
         uploaded_text = st.file_uploader("Upload Transcript File", type=["txt"])
 
+        # Only show the button if both files are uploaded
         if uploaded_media and uploaded_text:
-            if not feedback_generated:
+            # Store current files in session state
+            st.session_state.uploaded_media = uploaded_media
+            st.session_state.uploaded_text = uploaded_text
+
+            if st.button("Generate Feedback"):
                 with st.spinner("Generating feedback... Please wait for a few minutes and do not refresh or close the page."):
                     print(f"File name with ext: {uploaded_media.name}")
                     file_name = uploaded_media.name.split('.')[0]
@@ -85,8 +96,8 @@ def main():
                         temp_input_path = temp_input.name
 
                     # Save uploaded text to a temp file
-                    with tempfile.NamedTemporaryFile(delete=False, suffix=os.path.splitext(uploaded_media.name)[-1]) as temp_input:
-                        temp_input.write(uploaded_media.read())
+                    with tempfile.NamedTemporaryFile(delete=False, suffix='.txt') as temp_input:
+                        temp_input.write(uploaded_text.read())
                         ground_truth_path = temp_input.name
 
                     # Create a temp output path for audio
@@ -124,8 +135,13 @@ def main():
                     prompt_for_text(ground_truth_path, tt_file, text_feedback_file, model=model_option, text_prompt=text_prompt)
                     prompt_for_quality(ground_truth_path, tt_file, quality_feedback_file, model=model_option, quality_prompt=quality_prompt)
                     all_feedback = collate_all_feedback(tt_file, audio_feedback_file, audio_feedback_file, quality_feedback_file)
+                    st.session_state.feedback = all_feedback
                     st.success("Feedback generated successfully!")
-                    st.markdown(f"Feedback:\n{all_feedback}")
+                    # st.markdown(f"Feedback:\n{all_feedback}")
+
+        # If we have generated feedback in session state, display it
+        if st.session_state.feedback:
+            st.markdown(f"Feedback:\n{st.session_state.feedback}")
 
 
 if __name__ == "__main__":
