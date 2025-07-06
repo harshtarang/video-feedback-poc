@@ -4,11 +4,12 @@ import streamlit as st
 import os
 
 from feature_processor import word_level_feat_computation
-from llm_helper import prompt_for_audio, prompt_for_text, speech_to_text
+from llm_helper import prompt_for_audio, prompt_for_quality, prompt_for_text, speech_to_text
 from non_llm_feedback import filler_detection
+from post_processing import collate_all_feedback
 from speech_helper import get_speech_features, convert_vid_to_audio
 from dotenv import load_dotenv
-from prompt_templates import AUDIO_PROMPT, TEXT_PROMPT, TEXT_QUALITY_PROMPT
+from prompt_templates import AUDIO_PROMPT, AUDIO_PROMPT_V2, DISFLUENCY_PROMPT, TEXT_PROMPT, TEXT_PROMPT_V1, TEXT_QUALITY_PROMPT
 
 page_bg_img = '''
 <style>
@@ -23,14 +24,13 @@ page_bg_img = ""
 
 def get_keyword_list():
     # keyword_list = "Quantus 50, Co-enzyme Q10, Selenium, umm, hmm, Udiliv, diabetes, obesity, non-alcoholic liver diseases, liver disease, non-alcoholic fatty liver disease, AST, ALT, GGT, ALP, Ursodeoxycholic acid, position paper endorsed by 4 esteemed societies, Indian society of Gastroenterology, Indian college of cardiology, Endocrine society of India, INASL, cholestasis, hepatoprotective, antioxidant, anti-inflammatory, antiapoptotic, hypercholeretic, Non-alcoholic Liver Disease, 300mg BID, 10-15mg per , kg per day"
-    keyword_list = "Quantus 50, Co-enzyme Q10, Selenium, umm, hmm"
+    keyword_list = "Quantus 50, Co-enzyme Q10, Selenium,  umm, hmm, uhmm, mmmm, mhmm, uh, uhh, uhm"
     return keyword_list
 
 def load_environment():
     """Load environment variables from .env file"""
     # Load .env file from current directory
     load_dotenv(override=True)
-    print(os.getenv("OPENAI_API_KEY"))
     print("Environment variables loaded successfully!")
 
 def main():
@@ -60,9 +60,9 @@ def main():
         )
         
         st.subheader("Prompt Templates")
-        audio_prompt = st.text_area("Speech Analyzer Prompt", value=AUDIO_PROMPT, height=200)
-        text_prompt = st.text_area("Pitch Analyzer Prompt", value=TEXT_PROMPT, height=200)
-        quality_prompt = st.text_area("Quality Analyzer Prompt", value=TEXT_QUALITY_PROMPT, height=200)
+        audio_prompt = st.text_area("Speech Analyzer Prompt", value=AUDIO_PROMPT_V2, height=200)
+        text_prompt = st.text_area("Pitch Analyzer Prompt", value=TEXT_PROMPT_V1, height=200)
+        quality_prompt = st.text_area("Quality Analyzer Prompt", value=DISFLUENCY_PROMPT, height=200)
 
     with col2:
         st.header("Upload Files")
@@ -111,15 +111,21 @@ def main():
                     word_level_feat_file = tempfile.NamedTemporaryFile(delete=False, suffix=".csv").name
                     aat_file = tempfile.NamedTemporaryFile(delete=False, suffix=".txt").name
                     tt_file = tempfile.NamedTemporaryFile(delete=False, suffix=".txt").name
+                    audio_feedback_file = tempfile.NamedTemporaryFile(delete=False, suffix=".txt").name
+                    text_feedback_file = tempfile.NamedTemporaryFile(delete=False, suffix=".txt").name
+                    quality_feedback_file = tempfile.NamedTemporaryFile(delete=False, suffix=".txt").name
+
                     word_level_feat_computation(transcription_fl, pitch_txt, energy_txt, silence_txt, word_level_feat_file, aat_file,  tt_file)
                     non_llm_feedback = filler_detection(word_level_feat_file, silence_txt, window_interval = 0.02)
                     if non_llm_feedback:
                         st.text_area("Filler Words Feedback", value=non_llm_feedback, height=200)
                     ## LLM BASED FEEDBACK
-                    audio_feedback = prompt_for_audio(aat_file, temp_output_audio_path, model=model_option, audio_prompt=audio_prompt)
-                    corr_fb, quality_fb = prompt_for_text(ground_truth_path, transcription_fl, model=model_option, text_prompt=text_prompt, quality_prompt=quality_prompt)
+                    prompt_for_audio(aat_file, audio_feedback_file, model=model_option, audio_prompt=audio_prompt)
+                    prompt_for_text(ground_truth_path, tt_file, text_feedback_file, model=model_option, text_prompt=text_prompt)
+                    prompt_for_quality(ground_truth_path, tt_file, quality_feedback_file, model=model_option, quality_prompt=quality_prompt)
+                    all_feedback = collate_all_feedback(tt_file, audio_feedback_file, audio_feedback_file, quality_feedback_file)
                     st.success("Feedback generated successfully!")
-                    st.markdown(f"Audio Feedback:\n{audio_feedback}\n\nCorrectness Feedback:\n{corr_fb}\n\n Quality Feedback:\n{quality_fb}")
+                    st.markdown(f"Feedback:\n{all_feedback}")
 
 
 if __name__ == "__main__":

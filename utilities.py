@@ -18,6 +18,35 @@ GLOBAL_HIGH_SYLL_RATE = 5
 GLOBAL_LOW_SYLL_RATE = 3
 GLOBAL_MAX_PAUSE = 2
 
+def extract_json_from_llm_feedback(response, feedback_type):
+    try:
+        content = json.loads(response.split("```json")[1].split("```")[0].strip())
+    except:
+        try:
+            content = json.loads(response)
+        except:
+            return "Error in processing llm output. Trying again."
+    try:
+        if feedback_type == "audio" or feedback_type == "text":
+            assert sorted(list(content.keys())) == ["negative_feedback", "positive_feedback"]
+        if feedback_type == "quality":
+            list(content.keys()) == ["quality_feedback"]
+    except:
+        return "Error: positive and negative feedback keys not found. Trying again."
+    try:
+        if feedback_type == "audio" or feedback_type == "text":
+            for p in content["positive_feedback"]:
+                assert sorted(list(p.keys())) == ["attribute", "feedback", "id", "phrase", "score", "tip"] or sorted(list(p.keys())) == ["attribute", "feedback", "id", "phrase", "score"]
+            for n in content["negative_feedback"]:
+                assert sorted(list(n.keys())) == ["attribute", "feedback", "id", "phrase", "score", "tip"]
+        if feedback_type == "quality":
+            for n in content["quality_feedback"]:
+                assert sorted(list(n.keys())) == ["attribute", "feedback", "id", "phrase", "score", "tip"]
+                
+        return "Success"
+    except:
+        return "Error: relevant keys not found in feedback. Trying again."
+
 def count_syllables(word):
 
     word = word.lower()

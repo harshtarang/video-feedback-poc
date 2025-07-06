@@ -3,6 +3,8 @@
 import os
 from openai import OpenAI
 
+from constants import OPENAI_SEED
+
 # Model pricing in dollars per token (input cost per token, output cost per token)
 MODEL_PRICING = {
     "gpt-4o-mini": (0.50 / 1_000_000, 1.50 / 1_000_000),
@@ -35,6 +37,7 @@ def call_openai(
             top_p=top_p,
             max_tokens=max_completion_tokens,
             response_format=response_format,
+            # seed=OPENAI_SEED,  # Set seed for reproducibility
         )
     else:
         completion = client.chat.completions.create(
@@ -43,6 +46,7 @@ def call_openai(
             temperature=temperature,
             top_p=top_p,
             max_tokens=max_completion_tokens,
+            # seed=OPENAI_SEED,  # Set seed for reproducibility
         )
     # Calculate and print cost
     prompt_tokens = completion.usage.prompt_tokens
