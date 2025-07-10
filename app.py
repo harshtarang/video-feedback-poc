@@ -134,14 +134,83 @@ def main():
                     prompt_for_audio(aat_file, audio_feedback_file, model=model_option, audio_prompt=audio_prompt)
                     prompt_for_text(ground_truth_path, tt_file, text_feedback_file, model=model_option, text_prompt=text_prompt)
                     prompt_for_quality(ground_truth_path, tt_file, quality_feedback_file, model=model_option, quality_prompt=quality_prompt)
-                    all_feedback = collate_all_feedback(tt_file, audio_feedback_file, audio_feedback_file, quality_feedback_file)
-                    st.session_state.feedback = all_feedback
+                    pos_feedback, neg_feedback = collate_all_feedback(tt_file, audio_feedback_file, audio_feedback_file, quality_feedback_file)
+                    st.session_state.feedback = (pos_feedback, neg_feedback)
                     st.success("Feedback generated successfully!")
                     # st.markdown(f"Feedback:\n{all_feedback}")
 
         # If we have generated feedback in session state, display it
         if st.session_state.feedback:
-            st.markdown(f"Feedback:\n{st.session_state.feedback}")
+            st.markdown("""
+                <style>
+                .feedback-card {
+                    padding: 15px;
+                    border-radius: 10px;
+                    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+                    margin: 15px 0;
+                    border: 1px solid #e0e0e0;
+                    background-color: white;
+                }
+                .feedback-header {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-bottom: 10px;
+                }
+                .feedback-score {
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    color: white;
+                    font-weight: bold;
+                    font-size: 18px;
+                }
+                .feedback-time {
+                    font-size: 12px;
+                    color: #777;
+                    margin-top: 5px;
+                }
+                .feedback-tip {
+                    background-color: #f8f9fa;
+                    padding: 10px;
+                    border-radius: 5px;
+                    margin-top: 10px;
+                    border-left: 3px solid #4CAF50;
+                }
+                </style>
+            """, unsafe_allow_html=True)
+            
+            pos_feedback, neg_feedback = st.session_state.feedback
+            all_feedback = pos_feedback + neg_feedback
+            
+            for feedback in all_feedback:
+                # Determine score color
+                if feedback['score'] <= 2:
+                    score_color = '#ff4b4b'  # red
+                elif feedback['score'] == 3:
+                    score_color = '#ffd700'  # yellow
+                else:
+                    score_color = '#4CAF50'  # green
+                
+                # Create card
+                with st.container():
+                    st.markdown(f"""
+                        <div class="feedback-card">
+                            <div class="feedback-header">
+                                <div>
+                                    You mentioned "{feedback['phrase']}" in the sentence around {(feedback['start_time'] + feedback['end_time'])//2} seconds.
+                                </div>
+                                <div class="feedback-score" style="background-color: {score_color}">
+                                    {feedback['score']}
+                                </div>
+                            </div>
+                            <div><strong>Feedback:</strong> {feedback['feedback']}</div>
+                            {f'<div class="feedback-tip"><strong>Recommendation:</strong> {feedback["tip"]}</div>' if feedback.get('tip') else ''}
+                        </div>
+                    """, unsafe_allow_html=True)
 
 
 if __name__ == "__main__":

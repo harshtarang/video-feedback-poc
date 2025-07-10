@@ -52,7 +52,9 @@ def select_feedback(fdbck, sentence_df, fdbck_type, max_feedback):
             if prev_id < 0 and post_id >= len(sentence_df):
                 break 
         if time_int is not None:
-            curr_fdbck = {"time": time_int, "phrase": phrase, "feedback": fb["feedback"], "score": fb["score"], "id": actual_id, "attributes": attributes, "type": fdbck_type + "_" + fb["attribute"]} 
+            start_time = int(time_int.split("-")[0].strip())
+            end_time = int(time_int.split("-")[1].strip())
+            curr_fdbck = {"time": time_int, "phrase": phrase, "feedback": fb["feedback"], "score": fb["score"], "id": actual_id, "attributes": attributes, "type": fdbck_type + "_" + fb["attribute"], "start_time": start_time, "end_time": end_time} 
             if "tip" in fb:
                 curr_fdbck["tip"] = fb["tip"]
             final_feedback.append(curr_fdbck)
@@ -118,6 +120,8 @@ def collate_all_feedback(sentence_transcript, audio_feedback, text_feedback, qua
     sentence_df = pd.DataFrame(lines, columns = COLUMNS)
     sentence_df["id"] = sentence_df["id"].apply(lambda x: int(x.replace("<SID ","").strip()))
     sentence_df["time"] = sentence_df["time"].apply(lambda x: x.strip())
+    sentence_df["start_time"] = sentence_df["time"].apply(lambda x: int(x.split("-")[0].strip()))
+    sentence_df["end_time"] = sentence_df["time"].apply(lambda x: int(x.split("-")[1].strip()))
     
     pos_aud, neg_aud = process_llm_feedback(audio_feedback, sentence_df, "audio", MAX_NUM_AUDIO_FEEDBACK) 
     pos_txt, neg_txt = process_llm_feedback(text_feedback, sentence_df, "text", MAX_NUM_AUDIO_FEEDBACK) 
@@ -126,7 +130,8 @@ def collate_all_feedback(sentence_transcript, audio_feedback, text_feedback, qua
     pos_feedback = pos_aud + pos_txt
     neg_feedback = neg_aud + neg_txt + neg_q
 
-    return feedback_json_to_markdown(pos_feedback, neg_feedback)
+    # return feedback_json_to_markdown(pos_feedback, neg_feedback)
+    return pos_feedback, neg_feedback
         
         
         
