@@ -87,6 +87,7 @@ def main():
 
             if st.button("Generate Feedback"):
                 with st.spinner("Generating feedback... Please wait for a few minutes and do not refresh or close the page."):
+                    st.session_state.feedback = ([], [])  # Reset feedback
                     print(f"File name with ext: {uploaded_media.name}")
                     file_name = uploaded_media.name.split('.')[0]
                     print(f"File name: {file_name}")
@@ -188,9 +189,9 @@ def main():
             
             for feedback in all_feedback:
                 # Determine score color
-                if feedback['score'] <= 2:
+                if feedback['score'] <= 3:
                     score_color = '#ff4b4b'  # red
-                elif feedback['score'] == 3:
+                elif feedback['score'] <= 7:
                     score_color = '#ffd700'  # yellow
                 else:
                     score_color = '#4CAF50'  # green
@@ -203,9 +204,9 @@ def main():
                                 <div>
                                     You mentioned "{feedback['phrase']}" in the sentence around {(feedback['start_time'] + feedback['end_time'])//2} seconds.
                                 </div>
-                                <div class="feedback-score" style="background-color: {score_color}">
+                                <!-- <div class="feedback-score" style="background-color: {score_color}">
                                     {feedback['score']}
-                                </div>
+                                </div> -->
                             </div>
                             <div><strong>Feedback:</strong> {feedback['feedback']}</div>
                             <div><strong>Type:</strong> {feedback['type_display']}</div>
