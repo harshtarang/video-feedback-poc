@@ -208,6 +208,7 @@ def main():
                                 </div>
                             </div>
                             <div><strong>Feedback:</strong> {feedback['feedback']}</div>
+                            <div><strong>Type:</strong> {feedback['type_display']}</div>
                             {f'<div class="feedback-tip"><strong>Recommendation:</strong> {feedback["tip"]}</div>' if feedback.get('tip') else ''}
                         </div>
                     """, unsafe_allow_html=True)
