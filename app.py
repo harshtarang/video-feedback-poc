@@ -58,17 +58,19 @@ def main():
             "3. Click the 'Download Feedback' button to get the generated feedback."
         )
         
-        st.header("Settings")
-        model_option = st.selectbox(
-            "Select LLM Model",
-            ["OpenAI", "Gemini"],
-            index=0  # default to OpenAI
-        )
-        
-        st.subheader("Prompt Templates")
-        audio_prompt = st.text_area("Speech Analyzer Prompt", value=AUDIO_PROMPT_V2, height=200)
-        text_prompt = st.text_area("Pitch Analyzer Prompt", value=TEXT_PROMPT_V1, height=200)
-        quality_prompt = st.text_area("Quality Analyzer Prompt", value=DISFLUENCY_PROMPT, height=200)
+        # Show Settings only in developer mode
+        if os.environ.get('DEVELOPER_MODE') == 'True':
+            st.header("Settings")
+            model_option = st.selectbox(
+                "Select LLM Model",
+                ["OpenAI", "Gemini"],
+                index=0  # default to OpenAI
+            )
+            
+            st.subheader("Prompt Templates")
+            audio_prompt = st.text_area("Speech Analyzer Prompt", value=AUDIO_PROMPT_V2, height=200)
+            text_prompt = st.text_area("Pitch Analyzer Prompt", value=TEXT_PROMPT_V1, height=200)
+            quality_prompt = st.text_area("Quality Analyzer Prompt", value=DISFLUENCY_PROMPT, height=200)
 
     with col2:
         st.header("Upload Files")
