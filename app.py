@@ -71,7 +71,11 @@ def main():
             audio_prompt = st.text_area("Speech Analyzer Prompt", value=AUDIO_PROMPT_V2, height=200)
             text_prompt = st.text_area("Pitch Analyzer Prompt", value=TEXT_PROMPT_V1, height=200)
             quality_prompt = st.text_area("Quality Analyzer Prompt", value=DISFLUENCY_PROMPT, height=200)
-
+        else:
+            model_option = "OpenAI"
+            audio_prompt = AUDIO_PROMPT_V2
+            text_prompt = TEXT_PROMPT_V1
+            quality_prompt = DISFLUENCY_PROMPT
     with col2:
         st.header("Upload Files")
 
