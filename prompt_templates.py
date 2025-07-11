@@ -44,7 +44,7 @@ Based on this, provide feedback on the speaker’s vocal delivery. Focus on how 
     {{"id": <int>, // sentence ID or <SID> of the sentence about which feedback is provided as it appears in the augmented transcript,
       "phrase": <str>, // The phrase in the sentence (or the sentence) based on which feedback is provided. Include pitch, pace and pause information as it appears in augmented transcript
       "feedback": <str>, // A concise observation about what was done right. DO NOT include any numerical pitch, pace and pause information from the augmented transcript in the feedback. Instead use words like stress, pacing, intonation, pause, emotiona conveyed etc.
-      "score": <int>, // A score between 1-5 based on how important is the phrase and feedback to help the speaker improve or motivate them to do better.
+      "score": <int>, // A score between 1-10 based on how important is the phrase and feedback to help the speaker improve or motivate them to do better.
       "attribute": <str> // What attribute the feedback is focussing on such as pace, modulation, pause etc.
     }},
     ... // 1 or 2 more such positive feedbacks in above format
@@ -54,7 +54,7 @@ Based on this, provide feedback on the speaker’s vocal delivery. Focus on how 
       "phrase": <str>, // The phrase in the sentence (or the sentence) based on which feedback is provided. Include pitch, pace and pause information as it appears in augmented transcript
       "feedback": <str>, // A concise observation about what was done wrong. DO NOT include any numerical pitch, pace and pause information from the augmented transcript in the feedback. Instead use words like stress, pacing, intonation, pause, emotiona conveyed etc.
       "tip": <str>, // A practical, clear suggestion on how to further improve. This is MANDATORY for negative feedback.
-      "score": <int>, // A score between 1-5 based on how important is the phrase and feedback to help the speaker improve or motivate them to do better.
+      "score": <int>, // A score between 1-10 based on how important is the phrase and feedback to help the speaker improve or motivate them to do better.
       "attribute": <str> // What attribute the feedback is focussing on such as pace, modulation, pause etc.
     }}, 
     ... // 1 or 2 more such negative feedbacks in above format
@@ -77,7 +77,7 @@ Based on this, provide feedback on the sales rep pitch. Focus especially on the 
     {{"id": <int>, // sentence ID or <SID> of the sentence about which feedback is provided as it appears in the augmented transcript,
       "phrase": <str>, // The phrase in the sentence (or the sentence) based on which feedback is provided. Include pitch, pace and pause information as it appears in augmented transcript
       "feedback": <str>, // A concise observation about what was done right. DO NOT include any numerical pitch, pace and pause information from the augmented transcript in the feedback. Instead use words like stress, pacing, intonation, pause, emotiona conveyed etc.
-      "score": <int>, // A score between 1-5 based on how important is the phrase and feedback to help the speaker improve or motivate them to do better.
+      "score": <int>, // A score between 1-10 based on how important is the phrase and feedback to help the speaker improve or motivate them to do better.
       "attribute": <str> // What attribute the feedback is focussing on such as correctness, completeness, flow of information etc.
     }},
     ... // 1 or 2 more such positive feedbacks in above format
@@ -87,7 +87,7 @@ Based on this, provide feedback on the sales rep pitch. Focus especially on the 
       "phrase": <str>, // The phrase in the sentence (or the sentence) based on which feedback is provided. Include pitch, pace and pause information as it appears in augmented transcript
       "feedback": <str>, // A concise observation about what was done wrong. DO NOT include any numerical pitch, pace and pause information from the augmented transcript in the feedback. Instead use words like stress, pacing, intonation, pause, emotiona conveyed etc.
       "tip": <str>, // A practical, clear suggestion on how to further improve. This is MANDATORY for negative feedback.
-      "score": <int>, // A score between 1-5 based on how important is the phrase and feedback to help the speaker improve or motivate them to do better.
+      "score": <int>, // A score between 1-10 based on how important is the phrase and feedback to help the speaker improve or motivate them to do better.
       "attribute": <str> // What attribute the feedback is focussing on such as correctness, completeness, flow of information etc.
     }}, 
     ... // 1 or 2 more such negative feedbacks in above format
@@ -117,7 +117,7 @@ Based on this, provide feedback on the sales rep pitch. Focus especially on the 
       "phrase": <str>, // The phrase in the sentence (or the sentence) based on which feedback is provided. Include pitch, pace and pause information as it appears in augmented transcript
       "feedback": <str>, // A concise observation about what was done wrong. DO NOT include any numerical pitch, pace and pause information from the augmented transcript in the feedback. Instead use words like stress, pacing, intonation, pause, emotiona conveyed etc.
       "tip": <str>, // A practical, clear suggestion on how to further improve. This is MANDATORY for negative feedback.
-      "score": <int>, // A score between 1-5 based on how important is the phrase and feedback to help the speaker improve or motivate them to do better.
+      "score": <int>, // A score between 1-10 based on how important is the phrase and feedback to help the speaker improve or motivate them to do better.
       "attribute": <str> // What attribute the feedback is focussing on such as repetition, false start etc.
     }}, 
     ... // 1 or 2 more such quality feedbacks in above format
