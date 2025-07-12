@@ -33,11 +33,43 @@ def load_environment():
     load_dotenv(override=True)
     print("Environment variables loaded successfully!")
 
-def main():
+def landing_page():
+    """Display the landing page with login option"""
+    # Use columns to create a two-column layout
+    col1, col2 = st.columns([1, 1])
     
+    with col1:
+        st.title("Sales Muni")
+        st.markdown("""
+            Sales Muni helps medical representatives improve their sales pitch to doctors
+            through AI-powered feedback analysis. Our platform analyzes your presentation
+            videos and transcripts to provide actionable insights for improvement.
+        """)
+        
+        # Google login button with icon
+        # Google login button with icon
+        if st.button("Login with Google", key="google_login"):
+            st.session_state.authenticated = True
+            st.rerun()
+    
+    with col2:
+        # Right-hand section (blank for now)
+        st.write("")
+
+def main():
     st.set_page_config(layout="wide")
     st.markdown(page_bg_img, unsafe_allow_html=True)
     load_environment()
+    
+    # Initialize authentication state
+    if 'authenticated' not in st.session_state:
+        st.session_state.authenticated = False
+    
+    # Show landing page if not authenticated
+    if not st.session_state.authenticated:
+        landing_page()
+        return
+    
     # Initialize session state for files and feedback
     if 'uploaded_media' not in st.session_state:
         st.session_state.uploaded_media = None
