@@ -14,14 +14,13 @@ from prompt_templates import AUDIO_PROMPT, AUDIO_PROMPT_V2, DISFLUENCY_PROMPT, T
 page_bg_img = '''
 <style>
 .stApp {
-  background-image: url("https://media.istockphoto.com/id/1189302612/photo/multiethnic-specialist-doctors-discussing-case.jpg?s=612x612&w=0&k=20&c=2JwchjpCbkJfyyAfy4CK4lpeZlds6-OCOY4nYPrvwOQ=");
+  background-image: url("https://cdn.prod.website-files.com/5f902c64ef70f699f7a0c50d/613b5340d85bf1d47c1b51cb_remote_detailing_header.jpg");
   background-size: cover;
   background-position: center;
 }
 </style>
 '''
 page_bg_img = ""
-
 def get_keyword_list():
     # keyword_list = "Quantus 50, Co-enzyme Q10, Selenium, umm, hmm, Udiliv, diabetes, obesity, non-alcoholic liver diseases, liver disease, non-alcoholic fatty liver disease, AST, ALT, GGT, ALP, Ursodeoxycholic acid, position paper endorsed by 4 esteemed societies, Indian society of Gastroenterology, Indian college of cardiology, Endocrine society of India, INASL, cholestasis, hepatoprotective, antioxidant, anti-inflammatory, antiapoptotic, hypercholeretic, Non-alcoholic Liver Disease, 300mg BID, 10-15mg per , kg per day"
     keyword_list = "Quantus 50, Co-enzyme Q10, Selenium,  umm, hmm, uhmm, mmmm, mhmm, uh, uhh, uhm"
@@ -191,9 +190,15 @@ def main():
             """, unsafe_allow_html=True)
             
             pos_feedback, neg_feedback = st.session_state.feedback
-            all_feedback = pos_feedback + neg_feedback
+            st.header("Feedback")
+            st.subheader("🎯 Strengths: What you did well")
+            show_feedback_container(pos_feedback)
+            st.subheader("🛠️ Areas of improvement: What you can do differently")
+            show_feedback_container(neg_feedback)
             
-            for feedback in all_feedback:
+            
+def show_feedback_container(feedback_list):
+    for feedback in feedback_list:
                 # Determine score color
                 if feedback['score'] <= 3:
                     score_color = '#ff4b4b'  # red
@@ -216,10 +221,9 @@ def main():
                             </div>
                             <div><strong>Feedback:</strong> {feedback['feedback']}</div>
                             <div><strong>Type:</strong> {feedback['type_display']}</div>
-                            {f'<div class="feedback-tip"><strong>Recommendation:</strong> {feedback["tip"]}</div>' if feedback.get('tip') else ''}
+                            {f'<div class="feedback-tip"><strong>💡 Improvement Suggestion:</strong> {feedback["tip"]}</div>' if feedback.get('tip') else ''}
                         </div>
                     """, unsafe_allow_html=True)
-
 
 if __name__ == "__main__":
     main()
