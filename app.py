@@ -5,6 +5,7 @@ from time import sleep
 import uuid
 import streamlit as st
 import os
+import random
 
 from feature_processor import word_level_feat_computation
 from llm_helper import prompt_for_audio, prompt_for_quality, prompt_for_text, speech_to_text
@@ -294,12 +295,14 @@ def main():
             if st.button("Generate Feedback", type="primary"):
                 with st.spinner("Generating feedback... Please wait for a few minutes and do not refresh or close the page."):
                     st.session_state.feedback = ([], [])  # Reset feedback
-                    if os.getenv("USE_CACHED_FEEDBACK") == "True" and os.path.exists("cache/transcriptions/feedback.json"):
+                    if os.getenv("USE_CACHED_FEEDBACK") == "True" and os.path.exists("cache/feedback/audio.txt"):
                         print("*************************** USING CACHED FEEDBACK **********************************")
-                        with open("cache/feedback.json") as f:
-                            feedback_json = json.load(f)
-                            pos_feedback, neg_feedback = feedback_json["positive_feedback"], feedback_json["negative_feedback"]
-                            sleep(5)  # Simulate processing time
+                        tt_file = "cache/feedback/timed_transcription.txt"
+                        audio_feedback_file = "cache/feedback/audio.txt"
+                        text_feedback_file = "cache/feedback/text.txt"
+                        quality_feedback_file = "cache/feedback/quality.txt"
+    
+                        sleep(5)  # Simulate processing time
                             
                     else:
 
@@ -350,25 +353,14 @@ def main():
                         prompt_for_audio(aat_file, audio_feedback_file, model=model_option, audio_prompt=audio_prompt)
                         prompt_for_text(ground_truth_path, tt_file, text_feedback_file, model=model_option, text_prompt=text_prompt)
                         prompt_for_quality(ground_truth_path, tt_file, quality_feedback_file, model=model_option, quality_prompt=quality_prompt)
-                        pos_feedback, neg_feedback = collate_all_feedback(tt_file, audio_feedback_file, audio_feedback_file, quality_feedback_file)
+                        
+                    pos_feedback, neg_feedback = collate_all_feedback(tt_file, audio_feedback_file, text_feedback_file, quality_feedback_file)
                     st.session_state.feedback = (pos_feedback, neg_feedback)
                     st.success("Feedback generated successfully!")
                     # st.markdown(f"Feedback:\n{all_feedback}")
 
         # If we have generated feedback in session state, display it
         if st.session_state.feedback:
-            # Add anchor for scrolling
-            st.markdown('<div id="feedback-section"></div>', unsafe_allow_html=True)
-            st.components.v1.html(js)
-            # Scroll to feedback section using JavaScript
-            st.markdown(
-                """
-                <script>
-                    window.location.hash = "#feedback-section";
-                </script>
-                """,
-                unsafe_allow_html=True
-            )
             
             st.markdown("""
                 <style>
@@ -413,13 +405,86 @@ def main():
             """, unsafe_allow_html=True)
             
             pos_feedback, neg_feedback = st.session_state.feedback
+            
+            if 'show_all_feedback' not in st.session_state:
+                st.session_state.show_all_feedback = False
+
+            if st.session_state.show_all_feedback:
+                display_pos_feedback = pos_feedback
+                display_neg_feedback = neg_feedback
+            else:
+                display_pos_feedback = filter_feedback(pos_feedback, "positive")
+                display_neg_feedback = filter_feedback(neg_feedback, "negative")
+
             st.header("Feedback")
             st.subheader("🎯 Strengths: What you did well")
-            show_feedback_container(pos_feedback)
+            show_feedback_container(display_pos_feedback)
             st.subheader("🛠️ Areas of improvement: What you can do differently")
-            show_feedback_container(neg_feedback)
+            show_feedback_container(display_neg_feedback)
             
-            
+            if st.button("Show All Feedback"):
+                st.session_state.show_all_feedback = not st.session_state.show_all_feedback
+                st.rerun()
+
+def filter_feedback(feedback_list, feedback_type):
+    text_exactness_feedback = [f for f in feedback_list if 'text_completeness' in f.get('type') or 'text_correctness' in f.get('type')]
+    pacing_feedback = [f for f in feedback_list if "pace" in f.get('type') or "pause" in f.get('type')]
+    disfluencies_feedback = [f for f in feedback_list if "quality" in f.get('type')]
+    
+    filtered_feedback = []
+
+    if feedback_type == "positive":
+        # Prioritization for Strengths
+        # P1: Text Exactness (randomly choose any 2)
+        if len(text_exactness_feedback) >= 2:
+            filtered_feedback.extend(random.sample(text_exactness_feedback, 2))
+        else:
+            filtered_feedback.extend(text_exactness_feedback)
+
+        # P2: Pacing (randomly choose any 1)
+        if len(pacing_feedback) >= 1:
+            filtered_feedback.extend(random.sample(pacing_feedback, 1))
+        elif pacing_feedback:
+            filtered_feedback.extend(pacing_feedback)
+
+        # P3: Disfluencies (randomly choose 1 or more)
+        remaining_slots = 4 - len(filtered_feedback)
+        if remaining_slots > 0:
+            if len(disfluencies_feedback) >= remaining_slots:
+                filtered_feedback.extend(random.sample(disfluencies_feedback, remaining_slots))
+            else:
+                filtered_feedback.extend(disfluencies_feedback)
+
+    elif feedback_type == "negative":
+        # Prioritization for Areas of Improvement
+        # P1: Text Exactness (choose top 2 based on high Risk Score)
+        text_exactness_feedback_sorted = sorted(text_exactness_feedback, key=lambda x: x.get('score', 0), reverse=True)
+        filtered_feedback.extend(text_exactness_feedback_sorted[:2])
+
+        # P2: Pacing (choose 1 or max 2 with the highest risk scores)
+        pacing_feedback_sorted = sorted(pacing_feedback, key=lambda x: x.get('score', 0), reverse=True)
+        remaining_slots = 4 - len(filtered_feedback)
+        if remaining_slots > 0:
+            if len(pacing_feedback_sorted) >= min(2, remaining_slots):
+                filtered_feedback.extend(pacing_feedback_sorted[:min(2, remaining_slots)])
+            else:
+                filtered_feedback.extend(pacing_feedback_sorted)
+
+        # P3: Disfluencies (choose 1 or more based on risk score)
+        disfluencies_feedback_sorted = sorted(disfluencies_feedback, key=lambda x: x.get('score', 0), reverse=True)
+        remaining_slots = 4 - len(filtered_feedback)
+        if remaining_slots > 0:
+            if len(disfluencies_feedback_sorted) >= remaining_slots:
+                filtered_feedback.extend(disfluencies_feedback_sorted[:remaining_slots])
+            else:
+                filtered_feedback.extend(disfluencies_feedback_sorted)
+    
+    # De-prioritize showing any feedback on pitch (ensure it's not added)
+    final_filtered_feedback = [f for f in filtered_feedback if f.get('type_display') != 'Pitch']
+    
+    # Ensure max 4 feedbacks
+    return final_filtered_feedback[:4]
+
 def show_feedback_container(feedback_list):
     for feedback in feedback_list:
                 # Determine score color

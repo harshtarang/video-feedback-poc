@@ -1,4 +1,4 @@
 [theme]
-base="dark"
+base="light"
 [server]
 enableStaticServing = true

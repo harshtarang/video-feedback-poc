@@ -1,0 +1,53 @@
+```json
+{
+  "positive_feedback": [
+    {
+      "id": 1,
+      "phrase": "according <BEGIN_HIGHER_PITCH: 193Hz> <BEGIN_HIGH_PACE: 7.4 syl/s> to an article <END_HIGHER_PITCH: 193Hz> <END_HIGH_PACE: 7.4 syl/s>",
+      "feedback": "The use of higher pitch and fast pacing effectively captured attention and conveyed enthusiasm about the information being presented.",
+      "score": 8,
+      "attribute": "modulation"
+    },
+    {
+      "id": 10,
+      "phrase": "<BEGIN_HIGHER_PITCH: 220Hz> Condus is the most <END_HIGHER_PITCH: 220Hz> ideal combination for addressing male <PAUSE: 0.22s> oxidative stress infertility",
+      "feedback": "The elevated pitch emphasized the importance of the product, enhancing its perceived value and urgency.",
+      "score": 9,
+      "attribute": "modulation"
+    },
+    {
+      "id": 2,
+      "phrase": "strengthen <BEGIN_HIGH_PACE: 6.1 syl/s> non enzymatic antioxidant <END_HIGH_PACE: 6.1 syl/s>",
+      "feedback": "The pacing was well-managed, allowing the key term 'strengthen' to stand out, which effectively highlighted the product's benefits.",
+      "score": 7,
+      "attribute": "pace"
+    }
+  ],
+  "negative_feedback": [
+    {
+      "id": 4,
+      "phrase": "Condus reduces DNA <END_HIGH_PACE: 7.1 syl/s> fragmentation <PAUSE: 0.24s> index <PAUSE: 0.46s>",
+      "feedback": "The pacing was slightly too fast, which may have caused important information to be lost on the listener.",
+      "tip": "Consider slowing down the pace to ensure clarity and allow key points to resonate with the audience.",
+      "score": 6,
+      "attribute": "pace"
+    },
+    {
+      "id": 8,
+      "phrase": "<BEGIN_HIGH_PACE: 14.3 syl/s> Elargin one hundred <END_HIGH_PACE: 14.3 syl/s> mg in <PAUSE: 0.92s>",
+      "feedback": "The extremely high pace here may overwhelm the listener, making it difficult to absorb the information.",
+      "tip": "Try to maintain a more moderate pace, especially when introducing new or complex information.",
+      "score": 7,
+      "attribute": "pace"
+    },
+    {
+      "id": 13,
+      "phrase": "considering this comprehensive benefit please prescribe Condus fifty mg for your next patient presenting with MOSI",
+      "feedback": "The lack of pauses before key phrases made it harder for the listener to process the request effectively.",
+      "tip": "Incorporate strategic pauses before important requests to enhance their impact and give the listener time to reflect.",
+      "score": 5,
+      "attribute": "pause"
+    }
+  ]
+}
+```

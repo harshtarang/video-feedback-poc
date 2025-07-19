@@ -1,0 +1,53 @@
+```json
+{
+  "positive_feedback": [
+    {
+      "id": 1,
+      "phrase": "Doctor according to an article published in Reproductive Medicine two thousand and twenty thirty to eighty of infertile men exhibit elevated reactive oxygen species level in case of male oxidative stress infertility",
+      "feedback": "The rep effectively introduced a credible source and presented a relevant statistic, establishing a strong foundation for the discussion.",
+      "score": 8,
+      "attribute": "correctness"
+    },
+    {
+      "id": 5,
+      "phrase": "This improves sperm density motility and morphology",
+      "feedback": "The rep clearly articulated the positive outcomes of the product, which is crucial for persuading the doctor.",
+      "score": 7,
+      "attribute": "completeness"
+    },
+    {
+      "id": 10,
+      "phrase": "Condus is the most ideal combination for addressing male oxidative stress infertility",
+      "feedback": "The rep confidently stated the product's effectiveness, which is important for building trust and credibility.",
+      "score": 6,
+      "attribute": "flow of information"
+    }
+  ],
+  "negative_feedback": [
+    {
+      "id": 2,
+      "phrase": "Prescribe Condus fifty mg to strengthen non enzymatic antioxidant pathway by increasing total antioxidant capacity",
+      "feedback": "The product name was incorrectly stated as 'Condus' instead of 'Quantus', which could confuse the doctor.",
+      "tip": "Ensure to double-check product names and details to maintain accuracy.",
+      "score": 9,
+      "attribute": "correctness"
+    },
+    {
+      "id": 4,
+      "phrase": "Condus reduces DNA fragmentation index oxidative redemption potential and malonyaldehydes level by countering sperm DNA fragmentation and lipid peroxidation",
+      "feedback": "The rep omitted the term 'malondialdehyde' and did not clearly articulate the full names of the acronyms, which could lead to misunderstandings.",
+      "tip": "Use complete terms and ensure clarity when discussing technical details.",
+      "score": 8,
+      "attribute": "completeness"
+    },
+    {
+      "id": 12,
+      "phrase": "It is in the transformed solubilized in soil oil source from microbial origin for optimal bioavailability",
+      "feedback": "The phrasing was unclear and could confuse the listener; 'transformed' should be 'trans' and 'soil oil' should be 'soy oil'.",
+      "tip": "Practice clear articulation and ensure the correct terminology is used to enhance understanding.",
+      "score": 7,
+      "attribute": "flow of information"
+    }
+  ]
+}
+```
