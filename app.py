@@ -185,6 +185,50 @@ bubble_flow_css = '''
     100% { transform: rotate(360deg); }
 }
 </style>
+
+<style>
+/* Custom styles for Streamlit components */
+.stFileUploader > div {
+    background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+    border-radius: 25px;
+    padding: 20px 25px;
+    margin: 15px 0;
+    color: #333;
+    box-shadow: 0 8px 32px rgba(252, 182, 159, 0.3);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+}
+
+.stFileUploader > div:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 40px rgba(252, 182, 159, 0.4);
+}
+
+.stFileUploader label {
+    font-size: 22px; /* Increased font size */
+    font-weight: bold;
+    color: #333; /* Adjust color for better contrast */
+}
+
+.stButton > button {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 25px;
+    padding: 15px 30px;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.stButton > button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 40px rgba(102, 126, 234, 0.4);
+}
+</style>
 '''
 
 def render_instruction_flow():
@@ -281,10 +325,15 @@ def main():
         render_upload_file()
 
         # File Uploaders
+        st.markdown('<div class="stFileUploader">', unsafe_allow_html=True)
         uploaded_media = st.file_uploader(
             "Upload Detailing Video/Audio File", type=["mp4", "mp3", "wav", "avi", "mov"]
         )
+        st.markdown('</div>', unsafe_allow_html=True)
+
+        st.markdown('<div class="stFileUploader">', unsafe_allow_html=True)
         uploaded_text = st.file_uploader("Upload Detailing Script File", type=["txt"])
+        st.markdown('</div>', unsafe_allow_html=True)
 
         # Only show the button if both files are uploaded
         if uploaded_media and uploaded_text:
@@ -294,6 +343,7 @@ def main():
 
             if st.button("Generate Feedback", type="primary"):
                 with st.spinner("Generating feedback... Please wait for a few minutes and do not refresh or close the page."):
+                    st.markdown('<style>div.stSpinner > div > div {font-size: 22px;}</style>', unsafe_allow_html=True) # Increased font size for spinner
                     st.session_state.feedback = ([], [])  # Reset feedback
                     if os.getenv("USE_CACHED_FEEDBACK") == "True" and os.path.exists("cache/feedback/audio.txt"):
                         print("*************************** USING CACHED FEEDBACK **********************************")
@@ -356,7 +406,8 @@ def main():
                         
                     pos_feedback, neg_feedback = collate_all_feedback(tt_file, audio_feedback_file, text_feedback_file, quality_feedback_file)
                     st.session_state.feedback = (pos_feedback, neg_feedback)
-                    st.success("Feedback generated successfully!")
+                    st.markdown('<div style="background-color: #4CAF50; color: white; padding: 10px; border-radius: 5px; font-size: 22px; font-weight: bold; opacity: 1;">Feedback generated successfully!</div>', unsafe_allow_html=True)
+                    # st.success("Feedback generated successfully!") # Replaced with custom markdown for full opacity and larger text
                     # st.markdown(f"Feedback:\n{all_feedback}")
 
         # If we have generated feedback in session state, display it
