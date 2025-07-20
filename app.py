@@ -19,7 +19,7 @@ from prompt_templates import AUDIO_PROMPT, AUDIO_PROMPT_V2, DISFLUENCY_PROMPT, T
 page_bg_img = '''
 <style>
 .stApp {
-  background-image: url("/app/static/bg-5.png");
+  background-image: url("/static/bg-5.png");
   background-size: cover;
   background-position: center;
   background-color: rgba(0, 0, 0, 0);
@@ -30,7 +30,7 @@ page_bg_img = '''
 
 def get_keyword_list():
     # keyword_list = "Quantus 50, Co-enzyme Q10, Selenium, umm, hmm, Udiliv, diabetes, obesity, non-alcoholic liver diseases, liver disease, non-alcoholic fatty liver disease, AST, ALT, GGT, ALP, Ursodeoxycholic acid, position paper endorsed by 4 esteemed societies, Indian society of Gastroenterology, Indian college of cardiology, Endocrine society of India, INASL, cholestasis, hepatoprotective, antioxidant, anti-inflammatory, antiapoptotic, hypercholeretic, Non-alcoholic Liver Disease, 300mg BID, 10-15mg per , kg per day"
-    keyword_list = "Quantus 50, Co-enzyme Q10, Selenium,  umm, hmm, uhmm, mmmm, mhmm, uh, uhh, uhm"
+    keyword_list = "Boniliv,  Ursodeoxycholic acid, Indian society of Gastroenterology, the Indian college of cardiology, Endocrine Society of India, INASL, AST, ALT, GGT, ALP, 300mg BID, Non-alcoholic Liver Disease, umm, hmm, uhmm, mmmm, mhmm, uh, uhh, uhm"
     return keyword_list
 
 def load_environment():
