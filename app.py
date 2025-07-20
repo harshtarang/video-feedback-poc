@@ -19,7 +19,7 @@ from prompt_templates import AUDIO_PROMPT, AUDIO_PROMPT_V2, DISFLUENCY_PROMPT, T
 page_bg_img = '''
 <style>
 .stApp {
-  background-image: url("\\app\\static\\bg-5.png");
+  background-image: url("./app/static/bg-5.png");
   background-size: cover;
   background-position: center;
   background-color: rgba(0, 0, 0, 0);
