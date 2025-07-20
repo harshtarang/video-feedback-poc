@@ -19,7 +19,7 @@ from prompt_templates import AUDIO_PROMPT, AUDIO_PROMPT_V2, DISFLUENCY_PROMPT, T
 page_bg_img = '''
 <style>
 .stApp {
-  background-image: url("/app/static/bg-1.png");
+  background-image: url("/app/static/bg-5.png");
   background-size: cover;
   background-position: center;
   background-color: rgba(0, 0, 0, 0);
@@ -36,7 +36,7 @@ def get_keyword_list():
 def load_environment():
     """Load environment variables from .env file"""
     # Load .env file from current directory
-    load_environment()
+    load_dotenv(override=True)
     print("Environment variables loaded successfully!")
 
 js = '''
@@ -56,7 +56,7 @@ bubble_flow_css = '''
 }
 
 .step-bubble {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    # background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     border-radius: 25px;
     padding: 20px 25px;
     margin: 15px 0;
@@ -85,7 +85,7 @@ bubble_flow_css = '''
 }
 
 .step-bubble.step-3 {
-    background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+    background: linear-gradient(135deg, white 0%, white 100%);
     box-shadow: 0 8px 32px rgba(252, 182, 159, 0.3);
     color: #333;
 }
@@ -189,7 +189,19 @@ bubble_flow_css = '''
 <style>
 /* Custom styles for Streamlit components */
 .stFileUploader > div {
-    background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+    background: linear-gradient(135deg, white 0%, white 100%);
+    border-radius: 25px;
+    padding: 20px 25px;
+    margin: 15px 0;
+    color: #333;
+    box-shadow: 0 8px 32px rgba(252, 182, 159, 0.3);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+}
+
+.stFileUploader > section {
+    background: linear-gradient(135deg, white 0%, white 100%);
     border-radius: 25px;
     padding: 20px 25px;
     margin: 15px 0;
@@ -205,7 +217,7 @@ bubble_flow_css = '''
     box-shadow: 0 12px 40px rgba(252, 182, 159, 0.4);
 }
 
-.stFileUploader label {
+.stFileUploader > label > div {
     font-size: 22px; /* Increased font size */
     font-weight: bold;
     color: #333; /* Adjust color for better contrast */
