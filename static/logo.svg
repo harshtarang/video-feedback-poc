@@ -1,0 +1,34 @@
+<svg viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="mainGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#2563eb;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1d4ed8;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="accentGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#10b981;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#059669;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background circle -->
+  <circle cx="40" cy="40" r="35" fill="url(#mainGradient)" opacity="0.1"/>
+  
+  <!-- Medical cross symbol -->
+  <rect x="35" y="25" width="10" height="30" fill="url(#mainGradient)" rx="2"/>
+  <rect x="25" y="35" width="30" height="10" fill="url(#mainGradient)" rx="2"/>
+  
+  <!-- Growth arrow/chart element -->
+  <path d="M20 50 L30 45 L40 40 L50 35 L60 30" stroke="url(#accentGradient)" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <polygon points="55,27 60,30 57,35" fill="url(#accentGradient)"/>
+  
+  <!-- Small dots representing data points -->
+  <circle cx="30" cy="45" r="2" fill="url(#accentGradient)"/>
+  <circle cx="50" cy="35" r="2" fill="url(#accentGradient)"/>
+  
+  <!-- Company name -->
+  <text x="90" y="30" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#1f2937">Sales</text>
+  <text x="90" y="50" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="url(#accentGradient)">Muni</text>
+  
+  <!-- Tagline -->
+  <text x="90" y="62" font-family="Arial, sans-serif" font-size="9" fill="#6b7280">Medical Sales Excellence</text>
+</svg>

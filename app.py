@@ -1,8 +1,10 @@
 import base64
+from io import BytesIO
 import json
 import tempfile
 from time import sleep
 import uuid
+import requests
 import streamlit as st
 import os
 import random
@@ -240,13 +242,36 @@ bubble_flow_css = '''
     transform: translateY(-3px);
     box-shadow: 0 12px 40px rgba(102, 126, 234, 0.4);
 }
+
+.margin-top-100 {
+    margin-top: 100px;
+}
 </style>
 '''
 
 def render_instruction_flow():
     """Render the enhanced instruction flow with bubbles and arrows"""
     st.markdown(bubble_flow_css, unsafe_allow_html=True)
-    
+
+    # Load SVG file
+    # with open("./static/logo.png", "r") as file:
+        # png_data = file.read()
+    # Fetch the SVG content
+    # response = requests.get("./app/static/logo.svg")
+
+    # if response.status_code == 200:
+    #     svg_content = response.text
+    #     # Display in Streamlit
+    #     st.markdown(f"<div>{svg_content}</div>", unsafe_allow_html=True)
+
+    # Display in Streamlit
+    # st.image(png_data, use_column_width=True)
+
+    st.markdown(
+        '<img src="./app/static/logo3.png" height="100" alt="Logo">',
+        unsafe_allow_html=True,
+    )
+
     instruction_html = '''
     <div class="instruction-container">
         <div class="title-bubble">
@@ -286,7 +311,7 @@ def render_upload_file():
     
     instruction_html = '''
     <div class="instruction-container">
-        <div class="title-bubble">
+        <div class="title-bubble margin-top-100">
             <h3 style="margin: 0; font-size: 24px; text-align: left;"> Upload Files</h3>
         </div>
         
