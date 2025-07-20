@@ -93,14 +93,14 @@ def select_feedback(fdbck, sentence_df, fdbck_type, max_feedback):
 def map_feedback_type(feedback_type, attribute=None):
     if feedback_type == "audio":
         if attribute == "pace":
-            return "Pacing"
+            return "🔊 Pacing"
         else:
-            return "Stress on keywords"
+            return "🗝️ Stress on keywords"
     
     if feedback_type == "text":
-        return "Text Exactness"
+        return "📝 Text Exactness"
     
-    return "Speech Fluency"
+    return "🗣️ Speech Fluency"
 
 def process_llm_feedback(feedback, sen_df, feedback_type, max_num_feedback):
     with open(feedback) as f:

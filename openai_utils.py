@@ -13,7 +13,8 @@ MODEL_PRICING = {
     "gpt-3.5-turbo": (0.50 / 1_000_000, 1.50 / 1_000_000),
 }
 
-MAX_COMPLETION_TOKENS = int(os.getenv("OPENAI_MAX_COMPLETION_TOKENS", 512))
+MAX_COMPLETION_TOKENS = int(os.getenv("OPENAI_MAX_COMPLETION_TOKENS", 4095))
+print(f"Using max completion tokens: {MAX_COMPLETION_TOKENS}")
 
 def call_openai(
     query, temperature=0, top_p=1, max_completion_tokens=MAX_COMPLETION_TOKENS, response_format=None, provider="OpenAI"

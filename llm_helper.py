@@ -36,7 +36,7 @@ def prompt_for_audio(aug_trans_file, output_file, model="OpenAI", audio_prompt=N
     is_format_correct = "False"
     num_llm_calls = 0
     
-    while num_llm_calls < MAX_NUM_LLM_CALLS or is_format_correct != "Success":
+    while num_llm_calls < MAX_NUM_LLM_CALLS and is_format_correct != "Success":
         num_llm_calls += 1
         aud_fb = call_openai(aud_prompt, provider=model)
         print("*"*50)
@@ -72,7 +72,7 @@ def prompt_for_text(gt_file, timed_transcription, output_file, model="OpenAI", t
     is_format_correct = "False"
     num_llm_calls = 0
     
-    while num_llm_calls < MAX_NUM_LLM_CALLS or is_format_correct != "Success":
+    while num_llm_calls < MAX_NUM_LLM_CALLS and is_format_correct != "Success":
         num_llm_calls += 1
         text_fb = call_openai(prompt, provider=model)
         print("*"*50)
@@ -108,7 +108,7 @@ def prompt_for_quality(gt_file, timed_transcription, output_file, model="OpenAI"
     is_format_correct = "False"
     num_llm_calls = 0
     
-    while num_llm_calls < MAX_NUM_LLM_CALLS or is_format_correct != "Success":
+    while num_llm_calls < MAX_NUM_LLM_CALLS and is_format_correct != "Success":
         num_llm_calls += 1
         text_fb = call_openai(prompt, provider=model)
         print("*"*50)

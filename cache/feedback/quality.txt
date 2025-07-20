@@ -1,0 +1,25 @@
+```json
+{"quality_feedback": [
+    {"id": 1,
+      "phrase": "thirty to eighty of infertile men exhibit elevated reactive oxygen species level in case of male oxidative stress infertility",
+      "feedback": "There is a mispronunciation of 'thirty to eighty' and 'reactive oxygen species level', which affects clarity and professionalism.",
+      "tip": "Practice the correct pronunciation of numerical ranges and scientific terms to enhance clarity.",
+      "score": 7,
+      "attribute": "mispronunciation"
+    },
+    {"id": 2,
+      "phrase": "Prescribe Condus fifty mg to strengthen non enzymatic antioxidant pathway by increasing total antioxidant capacity",
+      "feedback": "The phrase 'Condus fifty mg' is mispronounced as 'Condus' instead of 'Quantus', which can confuse the listener.",
+      "tip": "Ensure to double-check product names and practice their pronunciation to avoid confusion.",
+      "score": 8,
+      "attribute": "mispronunciation"
+    },
+    {"id": 4,
+      "phrase": "Coenzyme Q10 in Condus is lipophilic and it is a two hydroxyl group except twice antioxidant effect",
+      "feedback": "There is a revision in the phrase 'it is a two hydroxyl group except twice antioxidant effect', which disrupts the flow and clarity.",
+      "tip": "Prepare and rehearse key phrases to maintain a smooth delivery without revisions.",
+      "score": 6,
+      "attribute": "revision"
+    }
+]}
+```

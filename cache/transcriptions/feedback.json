@@ -1,0 +1,151 @@
+{
+    "positive_feedback": [
+        {
+            "time": "4 - 16",
+            "phrase": "according to an article",
+            "feedback": "The use of higher pitch and fast pacing effectively captured attention and conveyed excitement about the information being presented.",
+            "score": 5,
+            "id": 1,
+            "attributes": [
+                "BEGIN_HIGHER_PITCH: 193Hz",
+                "BEGIN_HIGH_PACE: 7.4 syl/s",
+                "END_HIGHER_PITCH: 193Hz",
+                "END_HIGH_PACE: 7.4 syl/s"
+            ],
+            "type": "audio_modulation"
+        },
+        {
+            "time": "76 - 81",
+            "phrase": "condus is the most ideal combination for addressing male oxidative stress infertility",
+            "feedback": "The emphasis on 'most ideal' with a higher pitch added weight to the claim, enhancing its persuasive impact.",
+            "score": 4,
+            "id": 10,
+            "attributes": [
+                "BEGIN_HIGHER_PITCH: 220Hz",
+                "END_HIGHER_PITCH: 220Hz",
+                "PAUSE: 0.22s"
+            ],
+            "type": "audio_modulation"
+        },
+        {
+            "time": "16 - 23",
+            "phrase": "strengthen non enzymatic antioxidant",
+            "feedback": "The pacing was well-managed, allowing the key term 'strengthen' to stand out, which effectively highlighted its importance.",
+            "score": 4,
+            "id": 2,
+            "attributes": [
+                "BEGIN_HIGH_PACE: 6.1 syl/s",
+                "END_HIGH_PACE: 6.1 syl/s"
+            ],
+            "type": "audio_pace"
+        },
+        {
+            "time": "42 - 45",
+            "phrase": "this improves sperm density motility and morphology",
+            "feedback": "The rep clearly communicated the positive outcomes of the product, which is crucial for persuading the doctor.",
+            "score": 4,
+            "id": 5,
+            "attributes": [],
+            "type": "text_completeness"
+        },
+        {
+            "time": "76 - 81",
+            "phrase": "condus is the most ideal combination for addressing male oxidative stress infertility",
+            "feedback": "The rep confidently stated the product's effectiveness, which is important for building trust and encouraging prescription.",
+            "score": 3,
+            "id": 10,
+            "attributes": [],
+            "type": "text_flow of information"
+        }
+    ],
+    "negative_feedback": [
+        {
+            "time": "60 - 69",
+            "phrase": "elargin one hundred mg in condus boosts nitric oxide production",
+            "feedback": "The extremely high pace here may overwhelm the audience, making it difficult to absorb the information.",
+            "score": 4,
+            "id": 8,
+            "attributes": [
+                "BEGIN_HIGH_PACE: 14.3 syl/s",
+                "END_HIGH_PACE: 14.3 syl/s",
+                "PAUSE: 0.92s"
+            ],
+            "type": "audio_pace",
+            "tip": "Try to maintain a more moderate pace to enhance comprehension and retention of key details."
+        },
+        {
+            "time": "31 - 41",
+            "phrase": "condus reduces dna fragmentation index",
+            "feedback": "The pacing was slightly too fast, which may have caused important information to be lost on the listener.",
+            "score": 3,
+            "id": 4,
+            "attributes": [
+                "END_HIGH_PACE: 7.1 syl/s",
+                "PAUSE: 0.24s",
+                "PAUSE: 0.46s"
+            ],
+            "type": "audio_pace",
+            "tip": "Consider slowing down the pace to ensure clarity, especially when discussing critical points."
+        },
+        {
+            "time": "96 - 103",
+            "phrase": "considering this comprehensive benefit please prescribe condus fifty mg for your next patient presenting with mosi",
+            "feedback": "The lack of pauses in this sentence made it feel rushed, diminishing the impact of the request.",
+            "score": 3,
+            "id": 13,
+            "attributes": [],
+            "type": "audio_pause",
+            "tip": "Incorporate strategic pauses to allow the listener to process the information and emphasize the call to action."
+        },
+        {
+            "time": "16 - 23",
+            "phrase": "prescribe condus fifty mg to strengthen non enzymatic antioxidant pathway by increasing total antioxidant capacity",
+            "feedback": "The product name was incorrectly stated as 'Condus' instead of 'Quantus', which could confuse the doctor and undermine credibility.",
+            "score": 5,
+            "id": 2,
+            "attributes": [],
+            "type": "text_correctness",
+            "tip": "Ensure to double-check product names and details before the pitch to maintain accuracy."
+        },
+        {
+            "time": "24 - 30",
+            "phrase": "coenzyme q10 in condus is lipophilic and it is a two hydroxyl group except twice antioxidant effect",
+            "feedback": "The explanation of Coenzyme Q10's benefits was unclear and contained grammatical errors, which may hinder understanding.",
+            "score": 4,
+            "id": 3,
+            "attributes": [],
+            "type": "text_completeness",
+            "tip": "Practice articulating complex scientific terms clearly and accurately to enhance comprehension."
+        },
+        {
+            "time": "87 - 96",
+            "phrase": "it is in the transformed solubilized in soil oil source from microbial origin for optimal bioavailability",
+            "feedback": "The phrase was confusing due to grammatical issues and lack of clarity, which could detract from the message's impact.",
+            "score": 4,
+            "id": 12,
+            "attributes": [],
+            "type": "text_flow of information",
+            "tip": "Focus on simplifying language and ensuring grammatical accuracy to improve clarity."
+        },
+        {
+            "time": "16 - 23",
+            "phrase": "prescribe condus fifty mg to strengthen non enzymatic antioxidant pathway by increasing total antioxidant capacity",
+            "feedback": "The phrase 'Condus fifty mg' contains a mispronunciation of 'Condus' instead of 'Quantus', which could confuse the listener.",
+            "score": 5,
+            "id": 2,
+            "attributes": [],
+            "type": "quality_mispronunciation",
+            "tip": "Double-check product names and practice their pronunciation to avoid confusion during the pitch."
+        },
+        {
+            "time": "60 - 69",
+            "phrase": "elargin one hundred mg in condus boosts nitric oxide production enhancing capacitation hyperactivation and acrosome reaction while supporting erectile dysfunction",
+            "feedback": "There is a mispronunciation of 'L-Arginine' as 'Elargin', which detracts from the professionalism of the pitch.",
+            "score": 5,
+            "id": 8,
+            "attributes": [],
+            "type": "quality_mispronunciation",
+            "tip": "Focus on the correct pronunciation of key ingredients to maintain credibility and clarity."
+        }
+    ]
+}
