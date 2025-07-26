@@ -589,7 +589,7 @@ def show_feedback_container(feedback_list):
                         <div class="feedback-card">
                             <div class="feedback-header">
                                 <div>
-                                    You mentioned "{feedback['phrase']}" in the sentence around {(feedback.get('start_time',0))+ feedback.get('end_time',0)//2} seconds.
+                                    You mentioned "{feedback['phrase']}" in the sentence around {((feedback.get('start_time',0))+ feedback.get('end_time',0))//2} seconds.
                                 </div>
                                 <!-- <div class="feedback-score" style="background-color: {score_color}">
                                     {feedback['score']}
