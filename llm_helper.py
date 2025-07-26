@@ -30,7 +30,6 @@ def prompt_for_audio(aug_trans_file, output_file, model="OpenAI", audio_prompt=N
 
     prompt_template = audio_prompt if audio_prompt else AUDIO_PROMPT_V2
     aud_prompt = prompt_template.format(augmented_transcription = aug_trans)
-    print(aud_prompt)
     print("*"*50)
     
     is_format_correct = "False"
@@ -66,8 +65,6 @@ def prompt_for_text(gt_file, timed_transcription, output_file, model="OpenAI", t
     text_prompt_template = text_prompt if text_prompt else TEXT_PROMPT_V1
     
     prompt = text_prompt_template.format(ground_truth_text = gt, asr_transcription = trans)
-    print(prompt)
-    print("*"*50)
 
     is_format_correct = "False"
     num_llm_calls = 0
@@ -75,8 +72,6 @@ def prompt_for_text(gt_file, timed_transcription, output_file, model="OpenAI", t
     while num_llm_calls < MAX_NUM_LLM_CALLS and is_format_correct != "Success":
         num_llm_calls += 1
         text_fb = call_openai(prompt, provider=model)
-        print("*"*50)
-        print(text_fb)
         is_format_correct = extract_json_from_llm_feedback(text_fb, "text")
         
     
@@ -102,8 +97,6 @@ def prompt_for_quality(gt_file, timed_transcription, output_file, model="OpenAI"
     quality_prompt_template = quality_prompt if quality_prompt else DISFLUENCY_PROMPT
     
     prompt = quality_prompt_template.format(ground_truth_text = gt, asr_transcription = trans)
-    print(prompt)
-    print("*"*50)
 
     is_format_correct = "False"
     num_llm_calls = 0
@@ -111,8 +104,6 @@ def prompt_for_quality(gt_file, timed_transcription, output_file, model="OpenAI"
     while num_llm_calls < MAX_NUM_LLM_CALLS and is_format_correct != "Success":
         num_llm_calls += 1
         text_fb = call_openai(prompt, provider=model)
-        print("*"*50)
-        print(text_fb)
         is_format_correct = extract_json_from_llm_feedback(text_fb, "quality")
         
     

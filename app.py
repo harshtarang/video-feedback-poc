@@ -16,7 +16,7 @@ from post_processing import collate_all_feedback
 from speech_helper import get_speech_features, convert_vid_to_audio
 from dotenv import load_dotenv
 from prompt_templates import AUDIO_PROMPT, AUDIO_PROMPT_V2, DISFLUENCY_PROMPT, TEXT_PROMPT, TEXT_PROMPT_V1, TEXT_QUALITY_PROMPT
-
+from streamlit.components.v1 import html
 
 page_bg_img = '''
 <style>
@@ -396,6 +396,8 @@ def main():
                         print(f"File name with ext: {uploaded_media.name}")
                         file_name = uploaded_media.name.split('.')[0]
                         print(f"File name: {file_name}")
+                        extension = uploaded_media.name.split('.')[-1]
+                        print(f"File extension: {extension}")
                         # Save uploaded media to a temp file
                         with tempfile.NamedTemporaryFile(delete=False, suffix=os.path.splitext(uploaded_media.name)[-1]) as temp_input:
                             temp_input.write(uploaded_media.read())
@@ -406,13 +408,17 @@ def main():
                             temp_input.write(uploaded_text.read())
                             ground_truth_path = temp_input.name
 
-                        # Create a temp output path for audio
-                        temp_output_audio = tempfile.NamedTemporaryFile(delete=False, suffix=".wav")
-                        temp_output_audio_path = temp_output_audio.name
-                        temp_output_audio.close()
+                        if extension in ['mp4', 'avi', 'mov']:
+                            # Create a temp output path for audio
+                            temp_output_audio = tempfile.NamedTemporaryFile(delete=False, suffix=".wav")
+                            temp_output_audio_path = temp_output_audio.name
+                            temp_output_audio.close()
 
-                        # Convert video/audio to wav
-                        convert_vid_to_audio(temp_input_path, temp_output_audio_path)
+                            # Convert video/audio to wav
+                            convert_vid_to_audio(temp_input_path, temp_output_audio_path)
+                        else:
+                            # If it's already an audio file, just use the temp input path
+                            temp_output_audio_path = temp_input_path
 
                         # Generate speech features
                         pitch_txt = tempfile.NamedTemporaryFile(delete=False, suffix=".txt").name
@@ -509,6 +515,19 @@ def main():
             show_feedback_container(display_pos_feedback)
             st.subheader("🛠️ Areas of improvement: What you can do differently")
             show_feedback_container(display_neg_feedback)
+
+            js_code = """
+            <script>
+            function scrollToElement(elementId) {
+                var target = window.parent.document.getElementById(elementId);
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            }
+            scrollToElement('feedback');
+            </script>
+            """
+            html(js_code, height=0) # height=0 to make the component invisible
             
             if st.button("Show All Feedback"):
                 st.session_state.show_all_feedback = not st.session_state.show_all_feedback
@@ -589,7 +608,7 @@ def show_feedback_container(feedback_list):
                         <div class="feedback-card">
                             <div class="feedback-header">
                                 <div>
-                                    You mentioned "{feedback['phrase']}" in the sentence around {(feedback.get('start_time',0))+ feedback.get('end_time',0)//2} seconds.
+                                    You mentioned "{feedback['phrase']}" in the sentence around {((feedback.get('start_time',0))+ feedback.get('end_time',0))//2} seconds.
                                 </div>
                                 <!-- <div class="feedback-score" style="background-color: {score_color}">
                                     {feedback['score']}
