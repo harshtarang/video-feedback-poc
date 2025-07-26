@@ -396,6 +396,8 @@ def main():
                         print(f"File name with ext: {uploaded_media.name}")
                         file_name = uploaded_media.name.split('.')[0]
                         print(f"File name: {file_name}")
+                        extension = uploaded_media.name.split('.')[-1]
+                        print(f"File extension: {extension}")
                         # Save uploaded media to a temp file
                         with tempfile.NamedTemporaryFile(delete=False, suffix=os.path.splitext(uploaded_media.name)[-1]) as temp_input:
                             temp_input.write(uploaded_media.read())
@@ -406,13 +408,17 @@ def main():
                             temp_input.write(uploaded_text.read())
                             ground_truth_path = temp_input.name
 
-                        # Create a temp output path for audio
-                        temp_output_audio = tempfile.NamedTemporaryFile(delete=False, suffix=".wav")
-                        temp_output_audio_path = temp_output_audio.name
-                        temp_output_audio.close()
+                        if extension in ['mp4', 'avi', 'mov']:
+                            # Create a temp output path for audio
+                            temp_output_audio = tempfile.NamedTemporaryFile(delete=False, suffix=".wav")
+                            temp_output_audio_path = temp_output_audio.name
+                            temp_output_audio.close()
 
-                        # Convert video/audio to wav
-                        convert_vid_to_audio(temp_input_path, temp_output_audio_path)
+                            # Convert video/audio to wav
+                            convert_vid_to_audio(temp_input_path, temp_output_audio_path)
+                        else:
+                            # If it's already an audio file, just use the temp input path
+                            temp_output_audio_path = temp_input_path
 
                         # Generate speech features
                         pitch_txt = tempfile.NamedTemporaryFile(delete=False, suffix=".txt").name
