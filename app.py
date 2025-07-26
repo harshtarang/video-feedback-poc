@@ -16,7 +16,7 @@ from post_processing import collate_all_feedback
 from speech_helper import get_speech_features, convert_vid_to_audio
 from dotenv import load_dotenv
 from prompt_templates import AUDIO_PROMPT, AUDIO_PROMPT_V2, DISFLUENCY_PROMPT, TEXT_PROMPT, TEXT_PROMPT_V1, TEXT_QUALITY_PROMPT
-
+from streamlit.components.v1 import html
 
 page_bg_img = '''
 <style>
@@ -509,6 +509,19 @@ def main():
             show_feedback_container(display_pos_feedback)
             st.subheader("🛠️ Areas of improvement: What you can do differently")
             show_feedback_container(display_neg_feedback)
+
+            js_code = """
+            <script>
+            function scrollToElement(elementId) {
+                var target = window.parent.document.getElementById(elementId);
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            }
+            scrollToElement('feedback');
+            </script>
+            """
+            html(js_code, height=0) # height=0 to make the component invisible
             
             if st.button("Show All Feedback"):
                 st.session_state.show_all_feedback = not st.session_state.show_all_feedback
