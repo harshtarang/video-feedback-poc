@@ -30,6 +30,12 @@ page_bg_img = '''
 '''
 # page_bg_img = ""
 
+def convert_time_to_human_readable(start_time_in_seconds, end_time_in_seconds):
+    """Convert seconds to a human-readable format."""
+    seconds = (start_time_in_seconds + end_time_in_seconds) // 2
+    minutes, seconds = divmod(seconds, 60)
+    return f"{int(minutes):02}:{int(seconds):02}"
+
 def get_keyword_list():
     # keyword_list = "Quantus 50, Co-enzyme Q10, Selenium, umm, hmm, Udiliv, diabetes, obesity, non-alcoholic liver diseases, liver disease, non-alcoholic fatty liver disease, AST, ALT, GGT, ALP, Ursodeoxycholic acid, position paper endorsed by 4 esteemed societies, Indian society of Gastroenterology, Indian college of cardiology, Endocrine society of India, INASL, cholestasis, hepatoprotective, antioxidant, anti-inflammatory, antiapoptotic, hypercholeretic, Non-alcoholic Liver Disease, 300mg BID, 10-15mg per , kg per day"
     keyword_list = "Boniliv,  Ursodeoxycholic acid, Indian society of Gastroenterology, the Indian college of cardiology, Endocrine Society of India, INASL, AST, ALT, GGT, ALP, 300mg BID, Non-alcoholic Liver Disease, umm, hmm, uhmm, mmmm, mhmm, uh, uhh, uhm"
@@ -608,7 +614,7 @@ def show_feedback_container(feedback_list):
                         <div class="feedback-card">
                             <div class="feedback-header">
                                 <div>
-                                    You mentioned "{feedback['phrase']}" in the sentence around {((feedback.get('start_time',0))+ feedback.get('end_time',0))//2} seconds.
+                                    You mentioned "{feedback['phrase']}" in the sentence around the timestamp {convert_time_to_human_readable(feedback.get('start_time',0), feedback.get('end_time',0))}.
                                 </div>
                                 <!-- <div class="feedback-score" style="background-color: {score_color}">
                                     {feedback['score']}
