@@ -1,6 +1,7 @@
 import base64
 from io import BytesIO
 import json
+import logging
 import tempfile
 from time import sleep
 import uuid
@@ -18,6 +19,7 @@ from dotenv import load_dotenv
 from prompt_templates import AUDIO_PROMPT, AUDIO_PROMPT_V2, DISFLUENCY_PROMPT, TEXT_PROMPT, TEXT_PROMPT_V1, TEXT_QUALITY_PROMPT
 from streamlit.components.v1 import html
 
+logger = logging.getLogger(__name__)
 page_bg_img = '''
 <style>
 .stApp {
@@ -443,16 +445,19 @@ def main():
                         audio_feedback_file = tempfile.NamedTemporaryFile(delete=False, suffix=".txt").name
                         text_feedback_file = tempfile.NamedTemporaryFile(delete=False, suffix=".txt").name
                         quality_feedback_file = tempfile.NamedTemporaryFile(delete=False, suffix=".txt").name
-
-                        word_level_feat_computation(transcription_fl, pitch_txt, energy_txt, silence_txt, word_level_feat_file, aat_file,  tt_file)
-                        # non_llm_feedback = filler_detection(word_level_feat_file, silence_txt, window_interval = 0.02)
-                        # if non_llm_feedback:
-                        #     st.text_area("Filler Words Feedback", value=non_llm_feedback, height=200)
-                        ## LLM BASED FEEDBACK
-                        prompt_for_audio(aat_file, audio_feedback_file, model=model_option, audio_prompt=audio_prompt)
-                        prompt_for_text(ground_truth_path, tt_file, text_feedback_file, model=model_option, text_prompt=text_prompt)
-                        prompt_for_quality(ground_truth_path, tt_file, quality_feedback_file, model=model_option, quality_prompt=quality_prompt)
-                        
+                        try:
+                            word_level_feat_computation(transcription_fl, pitch_txt, energy_txt, silence_txt, word_level_feat_file, aat_file,  tt_file)
+                            # non_llm_feedback = filler_detection(word_level_feat_file, silence_txt, window_interval = 0.02)
+                            # if non_llm_feedback:
+                            #     st.text_area("Filler Words Feedback", value=non_llm_feedback, height=200)
+                            ## LLM BASED FEEDBACK
+                            prompt_for_audio(aat_file, audio_feedback_file, model=model_option, audio_prompt=audio_prompt)
+                            prompt_for_text(ground_truth_path, tt_file, text_feedback_file, model=model_option, text_prompt=text_prompt)
+                            prompt_for_quality(ground_truth_path, tt_file, quality_feedback_file, model=model_option, quality_prompt=quality_prompt)
+                        except Exception as e:
+                            st.error(f"An error occurred while processing the files: {e}")
+                            logger.exception(e)
+                            return
                     pos_feedback, neg_feedback = collate_all_feedback(tt_file, audio_feedback_file, text_feedback_file, quality_feedback_file)
                     st.session_state.feedback = (pos_feedback, neg_feedback)
                     st.markdown('<div style="background-color: #4CAF50; color: white; padding: 10px; border-radius: 5px; font-size: 22px; font-weight: bold; opacity: 1;">Feedback generated successfully!</div>', unsafe_allow_html=True)
