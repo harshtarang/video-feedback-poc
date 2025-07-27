@@ -281,22 +281,23 @@ def word_level_feat_computation(timed_transcription, pitch_file, energy_file, si
     print(af_augmented_transcription)
     '''
 
-    ##### MAY BE REDUNDANT ###
-    word_df["word_length"] = word_df["word"].apply(lambda x: len(x))
-    word_df["duration"] = word_df.apply(lambda row: max(row["end"] - row["start"], 1e-5), axis = 1)
-    word_df["syllables_per_sec"] = word_df.apply(lambda row: row["num_syllables"]/row["duration"], axis = 1)
-    word_df["pitch"] = word_df.apply(lambda row: compute_word_level_audio_feat(row["start"], row["end"], pitch, feat_type = "pitch"), axis = 1)
-    word_df["energy"] = word_df.apply(lambda row: compute_word_level_audio_feat(row["start"], row["end"], energy, feat_type = "energy", silence_threshold = silence_thresh), axis = 1)
-    word_df["silence_in_word"] = word_df.apply(lambda row: compute_word_level_audio_feat(row["start"], row["end"], silence, feat_type = "silence", window_interval = window_interval), axis = 1)
-    #make and save sentence wise plot
+    # ##### MAY BE REDUNDANT ###
+    # word_df["word_length"] = word_df["word"].apply(lambda x: len(x))
+    # word_df["duration"] = word_df.apply(lambda row: max(row["end"] - row["start"], 1e-5), axis = 1)
+    # word_df["syllables_per_sec"] = word_df.apply(lambda row: row["num_syllables"]/row["duration"], axis = 1)
+    # word_df["pitch"] = word_df.apply(lambda row: compute_word_level_audio_feat(row["start"], row["end"], pitch, feat_type = "pitch"), axis = 1)
+    # word_df["energy"] = word_df.apply(lambda row: compute_word_level_audio_feat(row["start"], row["end"], energy, feat_type = "energy", silence_threshold = silence_thresh), axis = 1)
+    # word_df["silence_in_word"] = word_df.apply(lambda row: compute_word_level_audio_feat(row["start"], row["end"], silence, feat_type = "silence", window_interval = window_interval), axis = 1)
+    # #make and save sentence wise plot
+    # print()
     
-    #print(max(word_df["pitch"]), min(word_df["pitch"][word_df["pitch"] != 0]), max(word_df["PHRASE_PITCH"]), min(word_df["PHRASE_PITCH"][word_df["PHRASE_PITCH"] != 0]))
-    # print_global_pitch_stats(word_df)
-    # print_global_pause_stats(word_df)
-    # print_global_pace(word_df)
-    # print_global_audible_stats(word_df, speechthresh)
-    word_df.to_csv(output_file_word_level_feat, index = False)
-    print("************************ WORD LEVEL FEATURES SAVED IN " + output_file_word_level_feat + " **********************************") 
+    # #print(max(word_df["pitch"]), min(word_df["pitch"][word_df["pitch"] != 0]), max(word_df["PHRASE_PITCH"]), min(word_df["PHRASE_PITCH"][word_df["PHRASE_PITCH"] != 0]))
+    # # print_global_pitch_stats(word_df)
+    # # print_global_pause_stats(word_df)
+    # # print_global_pace(word_df)
+    # # print_global_audible_stats(word_df, speechthresh)
+    # word_df.to_csv(output_file_word_level_feat, index = False)
+    # print("************************ WORD LEVEL FEATURES SAVED IN " + output_file_word_level_feat + " **********************************") 
     with open(output_file_aat, "w") as f:
         f.write(af_augmented_transcription)
     print("************************ AUGMENTED TRANSCRIPTION SAVED IN " + output_file_aat + " **********************************")
