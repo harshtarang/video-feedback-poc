@@ -18,8 +18,10 @@
 import json
 import string
 import numpy as np
+import warnings
+warnings.simplefilter(action='ignore', category=FutureWarning)
 import pandas as pd
-
+pd.options.mode.chained_assignment = None
 from utilities import count_syllables, find_boundaries, modify_sentence, read_feat
 
 GLOBAL_LOW_PITCH_THRESH = 80

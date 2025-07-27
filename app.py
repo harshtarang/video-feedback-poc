@@ -329,7 +329,7 @@ def render_upload_file():
     st.markdown(instruction_html, unsafe_allow_html=True)
 
 def main():
-    
+    load_environment()
     st.set_page_config(layout="wide")
     st.markdown(page_bg_img, unsafe_allow_html=True)
     # Initialize session state for files and feedback
@@ -390,6 +390,7 @@ def main():
                 with st.spinner("Generating feedback... Please wait for a few minutes and do not refresh or close the page."):
                     st.markdown('<style>div.stSpinner > div > div {font-size: 22px;}</style>', unsafe_allow_html=True) # Increased font size for spinner
                     st.session_state.feedback = ([], [])  # Reset feedback
+                    logger.info("Using cached feedback:", os.getenv("USE_CACHED_FEEDBACK"))
                     if os.getenv("USE_CACHED_FEEDBACK") == "True" and os.path.exists("cache/feedback/audio.txt"):
                         print("*************************** USING CACHED FEEDBACK **********************************")
                         tt_file = "cache/feedback/timed_transcription.txt"
@@ -416,17 +417,17 @@ def main():
                             temp_input.write(uploaded_text.read())
                             ground_truth_path = temp_input.name
 
-                        if extension in ['mp4', 'avi', 'mov']:
+                        # if extension in ['mp4', 'avi', 'mov']:
                             # Create a temp output path for audio
-                            temp_output_audio = tempfile.NamedTemporaryFile(delete=False, suffix=".wav")
-                            temp_output_audio_path = temp_output_audio.name
-                            temp_output_audio.close()
+                        temp_output_audio = tempfile.NamedTemporaryFile(delete=False, suffix=".wav")
+                        temp_output_audio_path = temp_output_audio.name
+                        temp_output_audio.close()
 
-                            # Convert video/audio to wav
-                            convert_vid_to_audio(temp_input_path, temp_output_audio_path)
-                        else:
-                            # If it's already an audio file, just use the temp input path
-                            temp_output_audio_path = temp_input_path
+                        # Convert video/audio to wav
+                        convert_vid_to_audio(temp_input_path, temp_output_audio_path)
+                        # else:
+                        #     # If it's already an audio file, just use the temp input path
+                        #     temp_output_audio_path = temp_input_path
 
                         # Generate speech features
                         pitch_txt = tempfile.NamedTemporaryFile(delete=False, suffix=".txt").name
